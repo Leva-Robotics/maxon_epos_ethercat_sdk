@@ -1,4 +1,0 @@
-string motor_name
-float64 req_velocity
----
-int32 success
