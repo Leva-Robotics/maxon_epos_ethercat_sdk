@@ -135,8 +135,8 @@ class Command {
   int32_t positionOffset_{0};
   int16_t torqueOffset_{0};
   int32_t velocityOffset_{0};
-  uint32_t profileAccel_{0};
-  uint32_t profileDeccel_{0};
+  uint32_t profileAccel_{100000};
+  uint32_t profileDeccel_{100000};
   int16_t motionProfileType_{0};
 
   std::mutex targetTorqueCommandMutex_;
@@ -144,7 +144,7 @@ class Command {
   uint32_t digitalOutputs_{0};
 
   double positionFactorRadToInteger_{1};
-  double velocityFactorConfiguredUnitToRadPerSec_{0};
+  double velocityFactorConfiguredUnitToRadPerSec_{1};
   double torqueFactorNmToInteger_{1};
   double currentFactorAToInteger_{1};
 

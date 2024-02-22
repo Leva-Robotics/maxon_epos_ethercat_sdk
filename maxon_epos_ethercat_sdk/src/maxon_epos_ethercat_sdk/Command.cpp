@@ -218,7 +218,7 @@ void Command::doUnitConversion() {
   if (!useRawCommands_) {
     targetPosition_ =
         static_cast<int32_t>(positionFactorRadToInteger_ * targetPositionUU_);
-    targetVelocity_ = static_cast<int32_t>(velocityFactorConfiguredUnitToRadPerSec_ *
+    targetVelocity_ = static_cast<int32_t>(1 *
                                            targetVelocityUU_);
     targetTorque_ =
         static_cast<int16_t>(torqueFactorNmToInteger_ * targetTorqueUU_);

@@ -40,24 +40,26 @@ namespace maxon {
 enum class RxPdoTypeEnum : int8_t {
   NA = 0,
   RxPdoStandard,
-  RxPdoCSP,
+  // RxPdoCSP,
   RxPdoCST,
-  RxPdoCSV,
-  RxPdoCSTCSP,
-  RxPdoCSTCSPCSV,
-  RxPdoPVM
+  // RxPdoCSV,
+  // RxPdoCSTCSP,
+  // RxPdoCSTCSPCSV,
+  RxPdoPVM,
+  RxPdoJVPT
 };
 
 // different TxPdo Types
 enum class TxPdoTypeEnum : int8_t {
   NA = -128,
   TxPdoStandard,
-  TxPdoCSP,
+  // TxPdoCSP,
   TxPdoCST,
-  TxPdoCSV,
-  TxPdoCSTCSP,
-  TxPdoCSTCSPCSV,
-  TxPdoPVM
+  // TxPdoCSV,
+  // TxPdoCSTCSP,
+  // TxPdoCSTCSPCSV,
+  TxPdoPVM,
+  TxPdoJVPT
 };
 
 }  // namespace maxon

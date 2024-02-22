@@ -91,6 +91,15 @@ struct TxPdoCSTCSPCSV {
 struct TxPdoPVM {
   uint16_t statusword_;
   int32_t demandVelocity_;
+  int32_t actualVelocity_;
 } __attribute__((packed));
+
+struct TxPdoJVPT {
+  uint16_t statusword_;
+  int16_t actualTorque_;
+  int32_t actualVelocity_;
+  int32_t actualPosition_;
+} __attribute__((packed));
+
 
 }  // namespace maxon

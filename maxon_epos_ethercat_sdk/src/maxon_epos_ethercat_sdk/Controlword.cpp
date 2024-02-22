@@ -187,6 +187,9 @@ void Controlword::setStateTransition12() {
   setAllFalse();
 }
 
+void Controlword::setStateTransition14() {
+  setAllFalse();
+}
 void Controlword::setStateTransition15() {
   setAllFalse();
   faultReset_ = true;

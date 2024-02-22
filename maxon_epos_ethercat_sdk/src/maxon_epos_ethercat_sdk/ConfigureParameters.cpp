@@ -68,54 +68,54 @@ bool Maxon::mapPdos(RxPdoTypeEnum rxPdoTypeEnum, TxPdoTypeEnum txPdoTypeEnum) {
 
       break;
     }
-    case RxPdoTypeEnum::RxPdoCSP: {
-      MELO_INFO_STREAM("[maxon_epos_ethercat_sdk:Maxon::mapPdos] Rx Pdo: "
-                       << "Cyclic Synchronous Position Mode");
+    // case RxPdoTypeEnum::RxPdoCSP: {
+    //   MELO_INFO_STREAM("[maxon_epos_ethercat_sdk:Maxon::mapPdos] Rx Pdo: "
+    //                    << "Cyclic Synchronous Position Mode");
 
-      // Disable PDO
-      rxSuccess &= sdoVerifyWrite(OD_INDEX_RX_PDO_ASSIGNMENT, 0x00, false,
-                                  static_cast<uint8_t>(0),
-                                  configuration_.configRunSdoVerifyTimeout);
+    //   // Disable PDO
+    //   rxSuccess &= sdoVerifyWrite(OD_INDEX_RX_PDO_ASSIGNMENT, 0x00, false,
+    //                               static_cast<uint8_t>(0),
+    //                               configuration_.configRunSdoVerifyTimeout);
 
-      rxSuccess &= sdoVerifyWrite(OD_INDEX_RX_PDO_MAPPING_3, 0x00, false,
-                                  static_cast<uint8_t>(0),
-                                  configuration_.configRunSdoVerifyTimeout);
+    //   rxSuccess &= sdoVerifyWrite(OD_INDEX_RX_PDO_MAPPING_3, 0x00, false,
+    //                               static_cast<uint8_t>(0),
+    //                               configuration_.configRunSdoVerifyTimeout);
 
-      // Write mapping
-      rxSuccess &= sdoVerifyWrite(OD_INDEX_RX_PDO_ASSIGNMENT, 0x01, false,
-                                  OD_INDEX_RX_PDO_MAPPING_3,
-                                  configuration_.configRunSdoVerifyTimeout);
+    //   // Write mapping
+    //   rxSuccess &= sdoVerifyWrite(OD_INDEX_RX_PDO_ASSIGNMENT, 0x01, false,
+    //                               OD_INDEX_RX_PDO_MAPPING_3,
+    //                               configuration_.configRunSdoVerifyTimeout);
 
-      // Write objects...
-      std::array<uint32_t, 5> objects{
-          (OD_INDEX_TARGET_POSITION << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
-          (OD_INDEX_OFFSET_POSITION << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
-          (OD_INDEX_OFFSET_TORQUE << 16) | (0x00 << 8) | sizeof(int16_t) * 8,
-          (OD_INDEX_CONTROLWORD << 16) | (0x00 << 8) | sizeof(int16_t) * 8,
-          (OD_INDEX_MODES_OF_OPERATION << 16) | (0x00 << 8) |
-              sizeof(int8_t) * 8,
-      };
+    //   // Write objects...
+    //   std::array<uint32_t, 5> objects{
+    //       (OD_INDEX_TARGET_POSITION << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
+    //       (OD_INDEX_OFFSET_POSITION << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
+    //       (OD_INDEX_OFFSET_TORQUE << 16) | (0x00 << 8) | sizeof(int16_t) * 8,
+    //       (OD_INDEX_CONTROLWORD << 16) | (0x00 << 8) | sizeof(int16_t) * 8,
+    //       (OD_INDEX_MODES_OF_OPERATION << 16) | (0x00 << 8) |
+    //           sizeof(int8_t) * 8,
+    //   };
 
-      subIndex = 0;
-      for (const auto& objectIndex : objects) {
-        subIndex += 1;
-        rxSuccess &= sdoVerifyWrite(OD_INDEX_RX_PDO_MAPPING_3, subIndex, false,
-                                    objectIndex,
-                                    configuration_.configRunSdoVerifyTimeout);
-      }
+    //   subIndex = 0;
+    //   for (const auto& objectIndex : objects) {
+    //     subIndex += 1;
+    //     rxSuccess &= sdoVerifyWrite(OD_INDEX_RX_PDO_MAPPING_3, subIndex, false,
+    //                                 objectIndex,
+    //                                 configuration_.configRunSdoVerifyTimeout);
+    //   }
 
-      // Write number of objects
-      rxSuccess &=
-          sdoVerifyWrite(OD_INDEX_RX_PDO_MAPPING_3, 0x00, false, subIndex,
-                         configuration_.configRunSdoVerifyTimeout);
+    //   // Write number of objects
+    //   rxSuccess &=
+    //       sdoVerifyWrite(OD_INDEX_RX_PDO_MAPPING_3, 0x00, false, subIndex,
+    //                      configuration_.configRunSdoVerifyTimeout);
 
-      // Enable PDO
-      rxSuccess &= sdoVerifyWrite(OD_INDEX_RX_PDO_ASSIGNMENT, 0x00, false,
-                                  static_cast<uint8_t>(1),
-                                  configuration_.configRunSdoVerifyTimeout);
+    //   // Enable PDO
+    //   rxSuccess &= sdoVerifyWrite(OD_INDEX_RX_PDO_ASSIGNMENT, 0x00, false,
+    //                               static_cast<uint8_t>(1),
+    //                               configuration_.configRunSdoVerifyTimeout);
 
-      break;
-    }
+    //   break;
+    // }
     case RxPdoTypeEnum::RxPdoCST: {
       MELO_INFO_STREAM("[maxon_epos_ethercat_sdk:Maxon::mapPdos] Rx Pdo: "
                        << "Cyclic Synchronous Troque Mode");
@@ -163,154 +163,154 @@ bool Maxon::mapPdos(RxPdoTypeEnum rxPdoTypeEnum, TxPdoTypeEnum txPdoTypeEnum) {
 
       break;
     }
-    case RxPdoTypeEnum::RxPdoCSV: {
-      MELO_INFO_STREAM("[maxon_epos_ethercat_sdk:Maxon::mapPdos] Rx Pdo: "
-                       << "Cyclic Synchronous Veloctity Mode");
+    // case RxPdoTypeEnum::RxPdoCSV: {
+    //   MELO_INFO_STREAM("[maxon_epos_ethercat_sdk:Maxon::mapPdos] Rx Pdo: "
+    //                    << "Cyclic Synchronous Veloctity Mode");
 
-      // Disable PDO
-      rxSuccess &= sdoVerifyWrite(OD_INDEX_RX_PDO_ASSIGNMENT, 0x00, false,
-                                  static_cast<uint8_t>(0),
-                                  configuration_.configRunSdoVerifyTimeout);
+    //   // Disable PDO
+    //   rxSuccess &= sdoVerifyWrite(OD_INDEX_RX_PDO_ASSIGNMENT, 0x00, false,
+    //                               static_cast<uint8_t>(0),
+    //                               configuration_.configRunSdoVerifyTimeout);
 
-      rxSuccess &= sdoVerifyWrite(OD_INDEX_RX_PDO_MAPPING_3, 0x00, false,
-                                  static_cast<uint8_t>(0),
-                                  configuration_.configRunSdoVerifyTimeout);
+    //   rxSuccess &= sdoVerifyWrite(OD_INDEX_RX_PDO_MAPPING_3, 0x00, false,
+    //                               static_cast<uint8_t>(0),
+    //                               configuration_.configRunSdoVerifyTimeout);
 
-      // Write mapping
-      rxSuccess &= sdoVerifyWrite(OD_INDEX_RX_PDO_ASSIGNMENT, 0x01, false,
-                                  OD_INDEX_RX_PDO_MAPPING_3,
-                                  configuration_.configRunSdoVerifyTimeout);
+    //   // Write mapping
+    //   rxSuccess &= sdoVerifyWrite(OD_INDEX_RX_PDO_ASSIGNMENT, 0x01, false,
+    //                               OD_INDEX_RX_PDO_MAPPING_3,
+    //                               configuration_.configRunSdoVerifyTimeout);
 
-      // Write objects...
-      std::array<uint32_t, 4> objects{
-          (OD_INDEX_TARGET_VELOCITY << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
-          (OD_INDEX_OFFSET_VELOCITY << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
-          (OD_INDEX_CONTROLWORD << 16) | (0x00 << 8) | sizeof(int16_t) * 8,
-          (OD_INDEX_MODES_OF_OPERATION << 16) | (0x00 << 8) |
-              sizeof(int8_t) * 8,
-      };
+    //   // Write objects...
+    //   std::array<uint32_t, 4> objects{
+    //       (OD_INDEX_TARGET_VELOCITY << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
+    //       (OD_INDEX_OFFSET_VELOCITY << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
+    //       (OD_INDEX_CONTROLWORD << 16) | (0x00 << 8) | sizeof(int16_t) * 8,
+    //       (OD_INDEX_MODES_OF_OPERATION << 16) | (0x00 << 8) |
+    //           sizeof(int8_t) * 8,
+    //   };
 
-      subIndex = 0;
-      for (const auto& objectIndex : objects) {
-        subIndex += 1;
-        rxSuccess &= sdoVerifyWrite(OD_INDEX_RX_PDO_MAPPING_3, subIndex, false,
-                                    objectIndex,
-                                    configuration_.configRunSdoVerifyTimeout);
-      }
+    //   subIndex = 0;
+    //   for (const auto& objectIndex : objects) {
+    //     subIndex += 1;
+    //     rxSuccess &= sdoVerifyWrite(OD_INDEX_RX_PDO_MAPPING_3, subIndex, false,
+    //                                 objectIndex,
+    //                                 configuration_.configRunSdoVerifyTimeout);
+    //   }
 
-      // Write number of objects
-      rxSuccess &=
-          sdoVerifyWrite(OD_INDEX_RX_PDO_MAPPING_3, 0x00, false, subIndex,
-                         configuration_.configRunSdoVerifyTimeout);
+    //   // Write number of objects
+    //   rxSuccess &=
+    //       sdoVerifyWrite(OD_INDEX_RX_PDO_MAPPING_3, 0x00, false, subIndex,
+    //                      configuration_.configRunSdoVerifyTimeout);
 
-      // Enable PDO
-      rxSuccess &= sdoVerifyWrite(OD_INDEX_RX_PDO_ASSIGNMENT, 0x00, false,
-                                  static_cast<uint8_t>(1),
-                                  configuration_.configRunSdoVerifyTimeout);
+    //   // Enable PDO
+    //   rxSuccess &= sdoVerifyWrite(OD_INDEX_RX_PDO_ASSIGNMENT, 0x00, false,
+    //                               static_cast<uint8_t>(1),
+    //                               configuration_.configRunSdoVerifyTimeout);
 
-      break;
-    }
-    case RxPdoTypeEnum::RxPdoCSTCSP: {
-      MELO_INFO_STREAM("[maxon_epos_ethercat_sdk:Maxon::mapPdos] Rx Pdo: "
-                       << "Cyclic Synchronous Toruqe/Position Mixed Mode");
+    //   break;
+    // }
+    // case RxPdoTypeEnum::RxPdoCSTCSP: {
+    //   MELO_INFO_STREAM("[maxon_epos_ethercat_sdk:Maxon::mapPdos] Rx Pdo: "
+    //                    << "Cyclic Synchronous Toruqe/Position Mixed Mode");
 
-      // Disable PDO
-      rxSuccess &= sdoVerifyWrite(OD_INDEX_RX_PDO_ASSIGNMENT, 0x00, false,
-                                  static_cast<uint8_t>(0),
-                                  configuration_.configRunSdoVerifyTimeout);
+    //   // Disable PDO
+    //   rxSuccess &= sdoVerifyWrite(OD_INDEX_RX_PDO_ASSIGNMENT, 0x00, false,
+    //                               static_cast<uint8_t>(0),
+    //                               configuration_.configRunSdoVerifyTimeout);
 
-      rxSuccess &= sdoVerifyWrite(OD_INDEX_RX_PDO_MAPPING_3, 0x00, false,
-                                  static_cast<uint8_t>(0),
-                                  configuration_.configRunSdoVerifyTimeout);
+    //   rxSuccess &= sdoVerifyWrite(OD_INDEX_RX_PDO_MAPPING_3, 0x00, false,
+    //                               static_cast<uint8_t>(0),
+    //                               configuration_.configRunSdoVerifyTimeout);
 
-      // Write mapping
-      rxSuccess &= sdoVerifyWrite(OD_INDEX_RX_PDO_ASSIGNMENT, 0x01, false,
-                                  OD_INDEX_RX_PDO_MAPPING_3,
-                                  configuration_.configRunSdoVerifyTimeout);
+    //   // Write mapping
+    //   rxSuccess &= sdoVerifyWrite(OD_INDEX_RX_PDO_ASSIGNMENT, 0x01, false,
+    //                               OD_INDEX_RX_PDO_MAPPING_3,
+    //                               configuration_.configRunSdoVerifyTimeout);
 
-      // Write objects...
-      std::array<uint32_t, 6> objects{
-          (OD_INDEX_TARGET_TORQUE << 16) | (0x00 << 8) | sizeof(int16_t) * 8,
-          (OD_INDEX_OFFSET_TORQUE << 16) | (0x00 << 8) | sizeof(int16_t) * 8,
-          (OD_INDEX_TARGET_POSITION << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
-          (OD_INDEX_OFFSET_POSITION << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
-          (OD_INDEX_CONTROLWORD << 16) | (0x00 << 8) | sizeof(int16_t) * 8,
-          (OD_INDEX_MODES_OF_OPERATION << 16) | (0x00 << 8) |
-              sizeof(int8_t) * 8,
-      };
+    //   // Write objects...
+    //   std::array<uint32_t, 6> objects{
+    //       (OD_INDEX_TARGET_TORQUE << 16) | (0x00 << 8) | sizeof(int16_t) * 8,
+    //       (OD_INDEX_OFFSET_TORQUE << 16) | (0x00 << 8) | sizeof(int16_t) * 8,
+    //       (OD_INDEX_TARGET_POSITION << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
+    //       (OD_INDEX_OFFSET_POSITION << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
+    //       (OD_INDEX_CONTROLWORD << 16) | (0x00 << 8) | sizeof(int16_t) * 8,
+    //       (OD_INDEX_MODES_OF_OPERATION << 16) | (0x00 << 8) |
+    //           sizeof(int8_t) * 8,
+    //   };
 
-      subIndex = 0;
-      for (const auto& objectIndex : objects) {
-        subIndex += 1;
-        rxSuccess &= sdoVerifyWrite(OD_INDEX_RX_PDO_MAPPING_3, subIndex, false,
-                                    objectIndex,
-                                    configuration_.configRunSdoVerifyTimeout);
-      }
+    //   subIndex = 0;
+    //   for (const auto& objectIndex : objects) {
+    //     subIndex += 1;
+    //     rxSuccess &= sdoVerifyWrite(OD_INDEX_RX_PDO_MAPPING_3, subIndex, false,
+    //                                 objectIndex,
+    //                                 configuration_.configRunSdoVerifyTimeout);
+    //   }
 
-      // Write number of objects
-      rxSuccess &=
-          sdoVerifyWrite(OD_INDEX_RX_PDO_MAPPING_3, 0x00, false, subIndex,
-                         configuration_.configRunSdoVerifyTimeout);
+    //   // Write number of objects
+    //   rxSuccess &=
+    //       sdoVerifyWrite(OD_INDEX_RX_PDO_MAPPING_3, 0x00, false, subIndex,
+    //                      configuration_.configRunSdoVerifyTimeout);
 
-      // Enable PDO
-      rxSuccess &= sdoVerifyWrite(OD_INDEX_RX_PDO_ASSIGNMENT, 0x00, false,
-                                  static_cast<uint8_t>(1),
-                                  configuration_.configRunSdoVerifyTimeout);
+    //   // Enable PDO
+    //   rxSuccess &= sdoVerifyWrite(OD_INDEX_RX_PDO_ASSIGNMENT, 0x00, false,
+    //                               static_cast<uint8_t>(1),
+    //                               configuration_.configRunSdoVerifyTimeout);
 
-      break;
-    }
-    case RxPdoTypeEnum::RxPdoCSTCSPCSV: {
-      MELO_INFO_STREAM(
-          "[maxon_epos_ethercat_sdk:Maxon::mapPdos] Rx Pdo: "
-          << "Cyclic Synchronous Toruqe/Position/Velocity Mixed Mode");
+    //   break;
+    // }
+    // case RxPdoTypeEnum::RxPdoCSTCSPCSV: {
+    //   MELO_INFO_STREAM(
+    //       "[maxon_epos_ethercat_sdk:Maxon::mapPdos] Rx Pdo: "
+    //       << "Cyclic Synchronous Toruqe/Position/Velocity Mixed Mode");
 
-      // Disable PDO
-      rxSuccess &= sdoVerifyWrite(OD_INDEX_RX_PDO_ASSIGNMENT, 0x00, false,
-                                  static_cast<uint8_t>(0),
-                                  configuration_.configRunSdoVerifyTimeout);
+    //   // Disable PDO
+    //   rxSuccess &= sdoVerifyWrite(OD_INDEX_RX_PDO_ASSIGNMENT, 0x00, false,
+    //                               static_cast<uint8_t>(0),
+    //                               configuration_.configRunSdoVerifyTimeout);
 
-      rxSuccess &= sdoVerifyWrite(OD_INDEX_RX_PDO_MAPPING_3, 0x00, false,
-                                  static_cast<uint8_t>(0),
-                                  configuration_.configRunSdoVerifyTimeout);
+    //   rxSuccess &= sdoVerifyWrite(OD_INDEX_RX_PDO_MAPPING_3, 0x00, false,
+    //                               static_cast<uint8_t>(0),
+    //                               configuration_.configRunSdoVerifyTimeout);
 
-      // Write mapping
-      rxSuccess &= sdoVerifyWrite(OD_INDEX_RX_PDO_ASSIGNMENT, 0x01, false,
-                                  OD_INDEX_RX_PDO_MAPPING_3,
-                                  configuration_.configRunSdoVerifyTimeout);
+    //   // Write mapping
+    //   rxSuccess &= sdoVerifyWrite(OD_INDEX_RX_PDO_ASSIGNMENT, 0x01, false,
+    //                               OD_INDEX_RX_PDO_MAPPING_3,
+    //                               configuration_.configRunSdoVerifyTimeout);
 
-      // Write objects...
-      std::array<uint32_t, 8> objects{
-          (OD_INDEX_TARGET_TORQUE << 16) | (0x00 << 8) | sizeof(int16_t) * 8,
-          (OD_INDEX_OFFSET_TORQUE << 16) | (0x00 << 8) | sizeof(int16_t) * 8,
-          (OD_INDEX_TARGET_POSITION << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
-          (OD_INDEX_OFFSET_POSITION << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
-          (OD_INDEX_TARGET_VELOCITY << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
-          (OD_INDEX_OFFSET_VELOCITY << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
-          (OD_INDEX_CONTROLWORD << 16) | (0x00 << 8) | sizeof(int16_t) * 8,
-          (OD_INDEX_MODES_OF_OPERATION << 16) | (0x00 << 8) |
-              sizeof(int8_t) * 8,
-      };
+    //   // Write objects...
+    //   std::array<uint32_t, 8> objects{
+    //       (OD_INDEX_TARGET_TORQUE << 16) | (0x00 << 8) | sizeof(int16_t) * 8,
+    //       (OD_INDEX_OFFSET_TORQUE << 16) | (0x00 << 8) | sizeof(int16_t) * 8,
+    //       (OD_INDEX_TARGET_POSITION << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
+    //       (OD_INDEX_OFFSET_POSITION << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
+    //       (OD_INDEX_TARGET_VELOCITY << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
+    //       (OD_INDEX_OFFSET_VELOCITY << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
+    //       (OD_INDEX_CONTROLWORD << 16) | (0x00 << 8) | sizeof(int16_t) * 8,
+    //       (OD_INDEX_MODES_OF_OPERATION << 16) | (0x00 << 8) |
+    //           sizeof(int8_t) * 8,
+    //   };
 
-      subIndex = 0;
-      for (const auto& objectIndex : objects) {
-        subIndex += 1;
-        rxSuccess &= sdoVerifyWrite(OD_INDEX_RX_PDO_MAPPING_3, subIndex, false,
-                                    objectIndex,
-                                    configuration_.configRunSdoVerifyTimeout);
-      }
+    //   subIndex = 0;
+    //   for (const auto& objectIndex : objects) {
+    //     subIndex += 1;
+    //     rxSuccess &= sdoVerifyWrite(OD_INDEX_RX_PDO_MAPPING_3, subIndex, false,
+    //                                 objectIndex,
+    //                                 configuration_.configRunSdoVerifyTimeout);
+    //   }
 
-      // Write number of objects
-      rxSuccess &=
-          sdoVerifyWrite(OD_INDEX_RX_PDO_MAPPING_3, 0x00, false, subIndex,
-                         configuration_.configRunSdoVerifyTimeout);
+    //   // Write number of objects
+    //   rxSuccess &=
+    //       sdoVerifyWrite(OD_INDEX_RX_PDO_MAPPING_3, 0x00, false, subIndex,
+    //                      configuration_.configRunSdoVerifyTimeout);
 
-      // Enable PDO
-      rxSuccess &= sdoVerifyWrite(OD_INDEX_RX_PDO_ASSIGNMENT, 0x00, false,
-                                  static_cast<uint8_t>(1),
-                                  configuration_.configRunSdoVerifyTimeout);
+    //   // Enable PDO
+    //   rxSuccess &= sdoVerifyWrite(OD_INDEX_RX_PDO_ASSIGNMENT, 0x00, false,
+    //                               static_cast<uint8_t>(1),
+    //                               configuration_.configRunSdoVerifyTimeout);
 
-      break;
-    }
+    //   break;
+    // }
     case RxPdoTypeEnum::RxPdoPVM: {
       MELO_INFO_STREAM("[maxon_epos_ethercat_sdk:Maxon::mapPdos] Rx Pdo: "
                        << "Profile Velocity Mode");
@@ -331,7 +331,7 @@ bool Maxon::mapPdos(RxPdoTypeEnum rxPdoTypeEnum, TxPdoTypeEnum txPdoTypeEnum) {
 
       // Write objects...
       std::array<uint32_t, 5> objects{
-          (OD_INDEX_CONTROLWORD << 16) | (0x00 << 8) | sizeof(int16_t) * 8,
+          (OD_INDEX_CONTROLWORD << 16) | (0x00 << 8) | sizeof(uint16_t) * 8,
           (OD_INDEX_TARGET_VELOCITY << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
           (OD_INDEX_PROFILE_ACCELERATION << 16) | (0x00 << 8) |
               sizeof(uint32_t) * 8,
@@ -405,52 +405,52 @@ bool Maxon::mapPdos(RxPdoTypeEnum rxPdoTypeEnum, TxPdoTypeEnum txPdoTypeEnum) {
 
       break;
     }
-    case TxPdoTypeEnum::TxPdoCSP: {
-      MELO_INFO_STREAM("[maxon_epos_ethercat_sdk:Maxon::mapPdos] Tx Pdo: "
-                       << "Cyclic Synchronous Position Mode");
+    // case TxPdoTypeEnum::TxPdoCSP: {
+    //   MELO_INFO_STREAM("[maxon_epos_ethercat_sdk:Maxon::mapPdos] Tx Pdo: "
+    //                    << "Cyclic Synchronous Position Mode");
 
-      // Disable PDO
-      txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_ASSIGNMENT, 0x00, false,
-                                  static_cast<uint8_t>(0),
-                                  configuration_.configRunSdoVerifyTimeout);
+    //   // Disable PDO
+    //   txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_ASSIGNMENT, 0x00, false,
+    //                               static_cast<uint8_t>(0),
+    //                               configuration_.configRunSdoVerifyTimeout);
 
-      txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_MAPPING_3, 0x00, false,
-                                  static_cast<uint8_t>(0),
-                                  configuration_.configRunSdoVerifyTimeout);
+    //   txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_MAPPING_3, 0x00, false,
+    //                               static_cast<uint8_t>(0),
+    //                               configuration_.configRunSdoVerifyTimeout);
 
-      // Write mapping
-      txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_ASSIGNMENT, 0x01, false,
-                                  OD_INDEX_TX_PDO_MAPPING_3,
-                                  configuration_.configRunSdoVerifyTimeout);
+    //   // Write mapping
+    //   txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_ASSIGNMENT, 0x01, false,
+    //                               OD_INDEX_TX_PDO_MAPPING_3,
+    //                               configuration_.configRunSdoVerifyTimeout);
 
-      // Write objects...
-      std::array<uint32_t, 4> objects{
-          (OD_INDEX_STATUSWORD << 16) | (0x00 << 8) | sizeof(uint16_t) * 8,
-          (OD_INDEX_TORQUE_ACTUAL << 16) | (0x00 << 8) | sizeof(int16_t) * 8,
-          (OD_INDEX_VELOCITY_ACTUAL << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
-          (OD_INDEX_POSITION_ACTUAL << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
-      };
+    //   // Write objects...
+    //   std::array<uint32_t, 4> objects{
+    //       (OD_INDEX_STATUSWORD << 16) | (0x00 << 8) | sizeof(uint16_t) * 8,
+    //       (OD_INDEX_TORQUE_ACTUAL << 16) | (0x00 << 8) | sizeof(int16_t) * 8,
+    //       (OD_INDEX_VELOCITY_ACTUAL << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
+    //       (OD_INDEX_POSITION_ACTUAL << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
+    //   };
 
-      subIndex = 0;
-      for (const auto& objectIndex : objects) {
-        subIndex += 1;
-        txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_MAPPING_3, subIndex, false,
-                                    objectIndex,
-                                    configuration_.configRunSdoVerifyTimeout);
-      }
+    //   subIndex = 0;
+    //   for (const auto& objectIndex : objects) {
+    //     subIndex += 1;
+    //     txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_MAPPING_3, subIndex, false,
+    //                                 objectIndex,
+    //                                 configuration_.configRunSdoVerifyTimeout);
+    //   }
 
-      // Write number of objects
-      txSuccess &=
-          sdoVerifyWrite(OD_INDEX_TX_PDO_MAPPING_3, 0x00, false, subIndex,
-                         configuration_.configRunSdoVerifyTimeout);
+    //   // Write number of objects
+    //   txSuccess &=
+    //       sdoVerifyWrite(OD_INDEX_TX_PDO_MAPPING_3, 0x00, false, subIndex,
+    //                      configuration_.configRunSdoVerifyTimeout);
 
-      // Enable PDO
-      txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_ASSIGNMENT, 0x00, false,
-                                  static_cast<uint8_t>(1),
-                                  configuration_.configRunSdoVerifyTimeout);
+    //   // Enable PDO
+    //   txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_ASSIGNMENT, 0x00, false,
+    //                               static_cast<uint8_t>(1),
+    //                               configuration_.configRunSdoVerifyTimeout);
 
-      break;
-    }
+    //   break;
+    // }
     case TxPdoTypeEnum::TxPdoCST: {
       MELO_INFO_STREAM("[maxon_epos_ethercat_sdk:Maxon::mapPdos] Tx Pdo: "
                        << "Cyclic Synchronous Torque Mode");
@@ -497,145 +497,145 @@ bool Maxon::mapPdos(RxPdoTypeEnum rxPdoTypeEnum, TxPdoTypeEnum txPdoTypeEnum) {
 
       break;
     }
-    case TxPdoTypeEnum::TxPdoCSV: {
-      MELO_INFO_STREAM("[maxon_epos_ethercat_sdk:Maxon::mapPdos] Tx Pdo: "
-                       << "Cyclic Synchronous Velocity Mode");
+    // case TxPdoTypeEnum::TxPdoCSV: {
+    //   MELO_INFO_STREAM("[maxon_epos_ethercat_sdk:Maxon::mapPdos] Tx Pdo: "
+    //                    << "Cyclic Synchronous Velocity Mode");
 
-      // Disable PDO
-      txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_ASSIGNMENT, 0x00, false,
-                                  static_cast<uint8_t>(0),
-                                  configuration_.configRunSdoVerifyTimeout);
+    //   // Disable PDO
+    //   txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_ASSIGNMENT, 0x00, false,
+    //                               static_cast<uint8_t>(0),
+    //                               configuration_.configRunSdoVerifyTimeout);
 
-      txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_MAPPING_3, 0x00, false,
-                                  static_cast<uint8_t>(0),
-                                  configuration_.configRunSdoVerifyTimeout);
+    //   txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_MAPPING_3, 0x00, false,
+    //                               static_cast<uint8_t>(0),
+    //                               configuration_.configRunSdoVerifyTimeout);
 
-      // Write mapping
-      txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_ASSIGNMENT, 0x01, false,
-                                  OD_INDEX_TX_PDO_MAPPING_3,
-                                  configuration_.configRunSdoVerifyTimeout);
+    //   // Write mapping
+    //   txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_ASSIGNMENT, 0x01, false,
+    //                               OD_INDEX_TX_PDO_MAPPING_3,
+    //                               configuration_.configRunSdoVerifyTimeout);
 
-      // Write objects...
-      std::array<uint32_t, 4> objects{
-          (OD_INDEX_STATUSWORD << 16) | (0x00 << 8) | sizeof(uint16_t) * 8,
-          (OD_INDEX_TORQUE_ACTUAL << 16) | (0x00 << 8) | sizeof(int16_t) * 8,
-          (OD_INDEX_VELOCITY_ACTUAL << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
-          (OD_INDEX_POSITION_ACTUAL << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
-      };
+    //   // Write objects...
+    //   std::array<uint32_t, 4> objects{
+    //       (OD_INDEX_STATUSWORD << 16) | (0x00 << 8) | sizeof(uint16_t) * 8,
+    //       (OD_INDEX_TORQUE_ACTUAL << 16) | (0x00 << 8) | sizeof(int16_t) * 8,
+    //       (OD_INDEX_VELOCITY_ACTUAL << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
+    //       (OD_INDEX_POSITION_ACTUAL << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
+    //   };
 
-      subIndex = 0;
-      for (const auto& objectIndex : objects) {
-        subIndex += 1;
-        txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_MAPPING_3, subIndex, false,
-                                    objectIndex,
-                                    configuration_.configRunSdoVerifyTimeout);
-      }
+    //   subIndex = 0;
+    //   for (const auto& objectIndex : objects) {
+    //     subIndex += 1;
+    //     txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_MAPPING_3, subIndex, false,
+    //                                 objectIndex,
+    //                                 configuration_.configRunSdoVerifyTimeout);
+    //   }
 
-      // Write number of objects
-      txSuccess &=
-          sdoVerifyWrite(OD_INDEX_TX_PDO_MAPPING_3, 0x00, false, subIndex,
-                         configuration_.configRunSdoVerifyTimeout);
+    //   // Write number of objects
+    //   txSuccess &=
+    //       sdoVerifyWrite(OD_INDEX_TX_PDO_MAPPING_3, 0x00, false, subIndex,
+    //                      configuration_.configRunSdoVerifyTimeout);
 
-      // Enable PDO
-      txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_ASSIGNMENT, 0x00, false,
-                                  static_cast<uint8_t>(1),
-                                  configuration_.configRunSdoVerifyTimeout);
+    //   // Enable PDO
+    //   txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_ASSIGNMENT, 0x00, false,
+    //                               static_cast<uint8_t>(1),
+    //                               configuration_.configRunSdoVerifyTimeout);
 
-      break;
-    }
-    case TxPdoTypeEnum::TxPdoCSTCSP: {
-      MELO_INFO_STREAM("[maxon_epos_ethercat_sdk:Maxon::mapPdos] Tx Pdo: "
-                       << "Cyclic Synchronous Torque/Position Mixed Mode");
+    //   break;
+    // }
+    // case TxPdoTypeEnum::TxPdoCSTCSP: {
+    //   MELO_INFO_STREAM("[maxon_epos_ethercat_sdk:Maxon::mapPdos] Tx Pdo: "
+    //                    << "Cyclic Synchronous Torque/Position Mixed Mode");
 
-      // Disable PDO
-      txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_ASSIGNMENT, 0x00, false,
-                                  static_cast<uint8_t>(0),
-                                  configuration_.configRunSdoVerifyTimeout);
+    //   // Disable PDO
+    //   txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_ASSIGNMENT, 0x00, false,
+    //                               static_cast<uint8_t>(0),
+    //                               configuration_.configRunSdoVerifyTimeout);
 
-      txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_MAPPING_3, 0x00, false,
-                                  static_cast<uint8_t>(0),
-                                  configuration_.configRunSdoVerifyTimeout);
+    //   txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_MAPPING_3, 0x00, false,
+    //                               static_cast<uint8_t>(0),
+    //                               configuration_.configRunSdoVerifyTimeout);
 
-      // Write mapping
-      txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_ASSIGNMENT, 0x01, false,
-                                  OD_INDEX_TX_PDO_MAPPING_3,
-                                  configuration_.configRunSdoVerifyTimeout);
+    //   // Write mapping
+    //   txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_ASSIGNMENT, 0x01, false,
+    //                               OD_INDEX_TX_PDO_MAPPING_3,
+    //                               configuration_.configRunSdoVerifyTimeout);
 
-      // Write objects...
-      std::array<uint32_t, 4> objects{
-          (OD_INDEX_STATUSWORD << 16) | (0x00 << 8) | sizeof(uint16_t) * 8,
-          (OD_INDEX_TORQUE_ACTUAL << 16) | (0x00 << 8) | sizeof(int16_t) * 8,
-          (OD_INDEX_VELOCITY_ACTUAL << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
-          (OD_INDEX_POSITION_ACTUAL << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
-      };
+    //   // Write objects...
+    //   std::array<uint32_t, 4> objects{
+    //       (OD_INDEX_STATUSWORD << 16) | (0x00 << 8) | sizeof(uint16_t) * 8,
+    //       (OD_INDEX_TORQUE_ACTUAL << 16) | (0x00 << 8) | sizeof(int16_t) * 8,
+    //       (OD_INDEX_VELOCITY_ACTUAL << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
+    //       (OD_INDEX_POSITION_ACTUAL << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
+    //   };
 
-      subIndex = 0;
-      for (const auto& objectIndex : objects) {
-        subIndex += 1;
-        txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_MAPPING_3, subIndex, false,
-                                    objectIndex,
-                                    configuration_.configRunSdoVerifyTimeout);
-      }
+    //   subIndex = 0;
+    //   for (const auto& objectIndex : objects) {
+    //     subIndex += 1;
+    //     txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_MAPPING_3, subIndex, false,
+    //                                 objectIndex,
+    //                                 configuration_.configRunSdoVerifyTimeout);
+    //   }
 
-      // Write number of objects
-      txSuccess &=
-          sdoVerifyWrite(OD_INDEX_TX_PDO_MAPPING_3, 0x00, false, subIndex,
-                         configuration_.configRunSdoVerifyTimeout);
+    //   // Write number of objects
+    //   txSuccess &=
+    //       sdoVerifyWrite(OD_INDEX_TX_PDO_MAPPING_3, 0x00, false, subIndex,
+    //                      configuration_.configRunSdoVerifyTimeout);
 
-      // Enable PDO
-      txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_ASSIGNMENT, 0x00, false,
-                                  static_cast<uint8_t>(1),
-                                  configuration_.configRunSdoVerifyTimeout);
+    //   // Enable PDO
+    //   txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_ASSIGNMENT, 0x00, false,
+    //                               static_cast<uint8_t>(1),
+    //                               configuration_.configRunSdoVerifyTimeout);
 
-      break;
-    }
-    case TxPdoTypeEnum::TxPdoCSTCSPCSV: {
-      MELO_INFO_STREAM(
-          "[maxon_epos_ethercat_sdk:Maxon::mapPdos] Tx Pdo: "
-          << "Cyclic Synchronous Torque/Position/Velocity Mixed Mode");
+    //   break;
+    // }
+    // case TxPdoTypeEnum::TxPdoCSTCSPCSV: {
+    //   MELO_INFO_STREAM(
+    //       "[maxon_epos_ethercat_sdk:Maxon::mapPdos] Tx Pdo: "
+    //       << "Cyclic Synchronous Torque/Position/Velocity Mixed Mode");
 
-      // Disable PDO
-      txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_ASSIGNMENT, 0x00, false,
-                                  static_cast<uint8_t>(0),
-                                  configuration_.configRunSdoVerifyTimeout);
+    //   // Disable PDO
+    //   txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_ASSIGNMENT, 0x00, false,
+    //                               static_cast<uint8_t>(0),
+    //                               configuration_.configRunSdoVerifyTimeout);
 
-      txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_MAPPING_3, 0x00, false,
-                                  static_cast<uint8_t>(0),
-                                  configuration_.configRunSdoVerifyTimeout);
+    //   txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_MAPPING_3, 0x00, false,
+    //                               static_cast<uint8_t>(0),
+    //                               configuration_.configRunSdoVerifyTimeout);
 
-      // Write mapping
-      txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_ASSIGNMENT, 0x01, false,
-                                  OD_INDEX_TX_PDO_MAPPING_3,
-                                  configuration_.configRunSdoVerifyTimeout);
+    //   // Write mapping
+    //   txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_ASSIGNMENT, 0x01, false,
+    //                               OD_INDEX_TX_PDO_MAPPING_3,
+    //                               configuration_.configRunSdoVerifyTimeout);
 
-      // Write objects...
-      std::array<uint32_t, 4> objects{
-          (OD_INDEX_STATUSWORD << 16) | (0x00 << 8) | sizeof(uint16_t) * 8,
-          (OD_INDEX_TORQUE_ACTUAL << 16) | (0x00 << 8) | sizeof(int16_t) * 8,
-          (OD_INDEX_VELOCITY_ACTUAL << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
-          (OD_INDEX_POSITION_ACTUAL << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
-      };
+    //   // Write objects...
+    //   std::array<uint32_t, 4> objects{
+    //       (OD_INDEX_STATUSWORD << 16) | (0x00 << 8) | sizeof(uint16_t) * 8,
+    //       (OD_INDEX_TORQUE_ACTUAL << 16) | (0x00 << 8) | sizeof(int16_t) * 8,
+    //       (OD_INDEX_VELOCITY_ACTUAL << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
+    //       (OD_INDEX_POSITION_ACTUAL << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
+    //   };
 
-      subIndex = 0;
-      for (const auto& objectIndex : objects) {
-        subIndex += 1;
-        txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_MAPPING_3, subIndex, false,
-                                    objectIndex,
-                                    configuration_.configRunSdoVerifyTimeout);
-      }
+    //   subIndex = 0;
+    //   for (const auto& objectIndex : objects) {
+    //     subIndex += 1;
+    //     txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_MAPPING_3, subIndex, false,
+    //                                 objectIndex,
+    //                                 configuration_.configRunSdoVerifyTimeout);
+    //   }
 
-      // Write number of objects
-      txSuccess &=
-          sdoVerifyWrite(OD_INDEX_TX_PDO_MAPPING_3, 0x00, false, subIndex,
-                         configuration_.configRunSdoVerifyTimeout);
+    //   // Write number of objects
+    //   txSuccess &=
+    //       sdoVerifyWrite(OD_INDEX_TX_PDO_MAPPING_3, 0x00, false, subIndex,
+    //                      configuration_.configRunSdoVerifyTimeout);
 
-      // Enable PDO
-      txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_ASSIGNMENT, 0x00, false,
-                                  static_cast<uint8_t>(1),
-                                  configuration_.configRunSdoVerifyTimeout);
+    //   // Enable PDO
+    //   txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_ASSIGNMENT, 0x00, false,
+    //                               static_cast<uint8_t>(1),
+    //                               configuration_.configRunSdoVerifyTimeout);
 
-      break;
-    }
+    //   break;
+    // }
     case TxPdoTypeEnum::TxPdoPVM: {
       // (OD_INDEX_TORQUE_ACTUAL << 16) | (0x01 << 8) | sizeof(int16_t) * 8
 
@@ -657,9 +657,10 @@ bool Maxon::mapPdos(RxPdoTypeEnum rxPdoTypeEnum, TxPdoTypeEnum txPdoTypeEnum) {
                                   configuration_.configRunSdoVerifyTimeout);
 
       // Write objects...
-      std::array<uint32_t, 2> objects{
+      std::array<uint32_t, 3> objects{
           (OD_INDEX_STATUSWORD << 16) | (0x00 << 8) | sizeof(uint16_t) * 8,
           (OD_INDEX_VELOCITY_DEMAND << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
+          (OD_INDEX_VELOCITY_ACTUAL << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
       };
 
       subIndex = 0;
@@ -717,8 +718,7 @@ bool Maxon::configParam() {
   uint32_t velocityPGain;
   uint32_t velocityIGain;
 
-  // configSuccess &=
-  //     sdoVerifyWrite(OD_INDEX_SI_UNIT_VELOCITY, 0x00, false, configuration_.velocityUnitSetting,
+  // configSuccess &= sdoVerifyWrite(OD_INDEX_SI_UNIT_VELOCITY, 0x00, false, 0xFDB44700,
   //                    configuration_.configRunSdoVerifyTimeout);
 
   // maxMotorSpeed = static_cast<uint32_t>(configuration_.workVoltage *
@@ -810,13 +810,13 @@ bool Maxon::configParam() {
   //                                 configuration_.configRunSdoVerifyTimeout);
 
   // velocityPGain =
-  //     static_cast<uint32_t>(1000000 * configuration_.velocityPGainSI);
+  //     static_cast<uint32_t>(1000000 * 10);
   // configSuccess &= sdoVerifyWrite(OD_INDEX_VELOCITY_CONTROL_PARAM, 0x01, false,
   //                                 static_cast<uint32_t>(velocityPGain),
   //                                 configuration_.configRunSdoVerifyTimeout);
 
   // velocityIGain =
-  //     static_cast<uint32_t>(1000000 * configuration_.velocityIGainSI);
+  //     static_cast<uint32_t>(10 * 1);
   // configSuccess &= sdoVerifyWrite(OD_INDEX_VELOCITY_CONTROL_PARAM, 0x02, false,
   //                                 static_cast<uint32_t>(velocityIGain),
   //                                 configuration_.configRunSdoVerifyTimeout);

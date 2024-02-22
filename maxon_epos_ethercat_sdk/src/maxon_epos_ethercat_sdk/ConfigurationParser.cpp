@@ -83,13 +83,13 @@ bool getModesFromFile(YAML::Node& yamlNode, const std::string& varName,
   }
   try {
     const std::map<std::string, ModeOfOperationEnum> str2ModeMap = {
-        {"ProfiledPositionMode", ModeOfOperationEnum::ProfiledPositionMode},
+        // {"ProfiledPositionMode", ModeOfOperationEnum::ProfiledPositionMode},
         {"ProfiledVelocityMode", ModeOfOperationEnum::ProfiledVelocityMode},
-        {"HomingMode", ModeOfOperationEnum::HomingMode},
-        {"CyclicSynchronousPositionMode",
-         ModeOfOperationEnum::CyclicSynchronousPositionMode},
-        {"CyclicSynchronousVelocityMode",
-         ModeOfOperationEnum::CyclicSynchronousVelocityMode},
+        // {"HomingMode", ModeOfOperationEnum::HomingMode},
+        // {"CyclicSynchronousPositionMode",
+        //  ModeOfOperationEnum::CyclicSynchronousPositionMode},
+        // {"CyclicSynchronousVelocityMode",
+        //  ModeOfOperationEnum::CyclicSynchronousVelocityMode},
         {"CyclicSynchronousTorqueMode",
          ModeOfOperationEnum::CyclicSynchronousTorqueMode},
     };
