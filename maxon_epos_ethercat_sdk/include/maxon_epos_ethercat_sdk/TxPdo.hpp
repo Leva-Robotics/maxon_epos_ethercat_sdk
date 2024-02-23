@@ -96,9 +96,9 @@ struct TxPdoPVM {
 
 struct TxPdoJVPT {
   uint16_t statusword_;
-  int16_t actualTorque_;
-  int32_t actualVelocity_;
-  int32_t actualPosition_;
+  int16_t estJointTorque_;
+  int32_t actualJointVelocity_;
+  int32_t actualJointPosition_;
 } __attribute__((packed));
 
 

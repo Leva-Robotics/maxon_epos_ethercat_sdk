@@ -78,6 +78,11 @@ class Command {
   void setTorqueOffset(double velocityOffset);
   void setVelocityOffset(double velocityOffset);
 
+  /// set joints in SI Units
+  void setJointPosition(double jointPosition);
+  void setJointVelocity(double jointVelocity);
+  void setJointTorque(double jointTorque);
+
   /// other
   void setDigitalOutputs(uint32_t digitalOutputs);
   void setUseRawCommands(bool useRawCommands);
@@ -94,12 +99,24 @@ class Command {
   uint32_t getProfileDeccelRaw() const;
   int16_t getMotionProfileType() const;
 
+  // Anydrive5 get joint values in raw
+
+  int32_t getTargetJointPositionRaw() const;
+  int32_t getTargetJointVelocityRaw() const;
+  int32_t getTargetJointTorqueRaw() const;
+
   /// get (user units)
   double getTargetPosition() const;
   double getTargetVelocity() const;
   double getTargetTorque() const;
   double getTorqueOffset() const;
   double getVelocityOffset() const;
+
+  //Anydrive5 get joint values in SI Units
+  double getTargetJointPosition() const;
+  double getTargetJointVelocity() const;
+  double getTargetJointTorque() const;
+
 
   /*!
    * Get the digital outputs.
@@ -129,15 +146,25 @@ class Command {
   double torqueOffsetUU_{0};
   double velocityOffsetUU_{0};
 
+ //Anydrive5 specific user unit command values
+ double targetJointPositionUU_{0};
+ double targetJointVelocityUU_{0};
+ double targetJointTorqueUU_{0};
+
   int32_t targetPosition_{0};
   int32_t targetVelocity_{0};
   int16_t targetTorque_{0};
   int32_t positionOffset_{0};
   int16_t torqueOffset_{0};
   int32_t velocityOffset_{0};
-  uint32_t profileAccel_{100000};
-  uint32_t profileDeccel_{100000};
+  uint32_t profileAccel_{0};
+  uint32_t profileDeccel_{0};
   int16_t motionProfileType_{0};
+
+  //Anydrive5 specific raw command values
+  int32_t targetJointPosition_{0};
+  int32_t targetJointVelocity_{0};
+  int32_t targetJointTorque_{0};
 
   std::mutex targetTorqueCommandMutex_;
 

@@ -109,6 +109,23 @@ double Reading::getAnalogInput() const {
   return static_cast<double>(analogInput_) * 0.001;
 }
 
+// Anydrive5 user unit reading methods, these are hardcoded for anydrive 5
+// I am not using any configuration file for these values because it is writte
+// poorly and I don't trust it
+
+double Reading::getActualJointPosition() const {
+  return static_cast<double>(actualJointPosition_) * 1;
+}
+
+double Reading::getActualJointVelocity() const {
+  return static_cast<double>(actualJointVelocity_) * 1;
+}
+
+double Reading::getEstJointTorque() const {
+  return static_cast<double>(estJointTorque_) * 1;
+}
+
+
 /*!
  * Other readings
  */
@@ -157,6 +174,21 @@ void Reading::setCurrentFactorIntegerToAmp(double currentFactor) {
 void Reading::setTorqueFactorIntegerToNm(double torqueFactor) {
   torqueFactorIntegerToNm_ = torqueFactor;
 }
+
+  //Anydrive5 specific RAW reading methods
+
+  void Reading::setActualJointPositionRAW(int32_t actualJointPosition) {
+    actualJointPosition_ = actualJointPosition;
+  }
+
+  void Reading::setActualJointVelocityRAW(int32_t actualJointVelocity) {
+    actualJointVelocity_ = actualJointVelocity;
+  }
+
+  void Reading::setEstJointTorqueRAW(int32_t estJointTorque) {
+    estJointTorque_ = estJointTorque;
+  }
+
 
 double Reading::getAgeOfLastErrorInMicroseconds() const {
   ReadingDuration errorDuration = ReadingClock::now() - lastError_.second;

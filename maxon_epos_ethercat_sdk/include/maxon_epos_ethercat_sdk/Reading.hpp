@@ -85,6 +85,12 @@ class Reading {
   double getAgeOfLastReadingInMicroseconds() const;
   double getBusVoltage() const;
 
+  //Anydrive5 user unit get methods
+
+  double getActualJointPosition() const;
+  double getActualJointVelocity() const;
+  double getEstJointTorque() const;
+
   /*!
    * Other get methods
    */
@@ -120,6 +126,16 @@ class Reading {
 
   void setTorqueFactorIntegerToNm(double torqueFactor);
 
+  //Anydrive5 specific RAW reading methods
+
+  void setActualJointPositionRAW(int32_t actualJointPosition);
+
+  void setActualJointVelocityRAW(int32_t actualJointVelocity);
+
+  void setEstJointTorqueRAW(int32_t estJointTorque);
+
+  //
+
  protected:
   int32_t actualPosition_{0};
   int32_t digitalInputs_{0};
@@ -129,6 +145,11 @@ class Reading {
   int16_t analogInput_{0};
   int16_t actualCurrent_{0};
   uint32_t busVoltage_{0};
+
+  //Anydrive5 specific RAW reading variables
+  int32_t actualJointPosition_{0};
+  int32_t actualJointVelocity_{0};
+  int32_t estJointTorque_{0};
 
   double positionFactorIntegerToRad_{1};
   double velocityFactorConfiguredUnitToRadPerSec_ = 2.0 * M_PI / (60.0); //default reading: rpm

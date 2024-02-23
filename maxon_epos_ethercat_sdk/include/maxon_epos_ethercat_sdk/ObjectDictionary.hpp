@@ -95,3 +95,21 @@
 #define OD_INDEX_ABORT_CONNECTION_OPTION_CODE (0x6007)
 #define OD_INDEX_RESET_DEFAULT_PARAMETERS (0x1011)
 #define OD_INDEX_MAX_SYSTEM_SPEED (0x3000)
+
+
+
+// anydrive5 specific object dictionary values
+
+#define OD_INDEX_JOINT_TORQUE_EST (0x3672)
+#define OD_INDEX_JOINT_VELOCITY_ACTUAL (0x606C)
+#define OD_INDEX_JOINT_POSITION_ACTUAL (0x6064)
+
+#define OD_INDEX_TARGET_JOINT_TORQUE (0x34C3)
+//not sure abot these two values normallly you cannot write tot these with PDO
+//but JVPT controller seemingly uses these as input 
+// #define OD_INDEX_TARGET_JOINT_VELOCITY (0x606B) //0x60FF target velocity
+// #define OD_INDEX_TARGET_JOINT_POSITION (0x6062) //0x607A target position
+
+#define OD_INDEX_TARGET_JOINT_VELOCITY (0x60FF) //0x60FF target velocity
+#define OD_INDEX_TARGET_JOINT_POSITION (0x607A) //0x607A target position
+

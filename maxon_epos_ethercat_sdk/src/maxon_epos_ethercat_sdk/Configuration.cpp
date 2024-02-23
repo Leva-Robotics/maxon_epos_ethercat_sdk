@@ -41,18 +41,14 @@
 namespace maxon {
 std::string modeOfOperationString(ModeOfOperationEnum modeOfOperation_) {
   switch (modeOfOperation_) {
-    // case ModeOfOperationEnum::ProfiledPositionMode:
-    //   return "Profiled Position Mode";
+    case ModeOfOperationEnum::NA:
+      return "NA";
     case ModeOfOperationEnum::ProfiledVelocityMode:
       return "Profiled Velocity Mode";
-    // case ModeOfOperationEnum::HomingMode:
-    //   return "Homing Mode";
-    // case ModeOfOperationEnum::CyclicSynchronousPositionMode:
-    //   return "Cyclic Synchronous Position Mode";
-    // case ModeOfOperationEnum::CyclicSynchronousVelocityMode:
-    //   return "Cyclic Synchronous Velocity Mode";
     case ModeOfOperationEnum::CyclicSynchronousTorqueMode:
       return "Cyclic Synchronous Torque Mode";
+    case ModeOfOperationEnum::CyclicJVPTMode:
+      return "Cyclic JVPT Mode";
     default:
       return "Unsupported Mode of Operation";
   }
@@ -64,18 +60,12 @@ std::string rxPdoString(RxPdoTypeEnum rxPdo) {
       return "NA";
     case RxPdoTypeEnum::RxPdoStandard:
       return "Rx PDO Standard";
-    // case RxPdoTypeEnum::RxPdoCSP:
-    //   return "Rx PDO CSP";
     case RxPdoTypeEnum::RxPdoCST:
       return "Rx PDO CST";
-    // case RxPdoTypeEnum::RxPdoCSV:
-    //   return "Rx PDO CSV";
-    // case RxPdoTypeEnum::RxPdoCSTCSP:
-    //   return "Rx PDO CST/CSP mixed mode";
-    // case RxPdoTypeEnum::RxPdoCSTCSPCSV:
-    //   return "Rx PDO CST/CSP/CSV mixed mode";
     case RxPdoTypeEnum::RxPdoPVM:
       return "Rx PDO PVM";
+    case RxPdoTypeEnum::RxPdoJVPT:
+      return "Rx PDO JVPT";
     default:
       return "Unsupported Type";
   }
@@ -85,20 +75,14 @@ std::string txPdoString(TxPdoTypeEnum txPdo) {
   switch (txPdo) {
     case TxPdoTypeEnum::NA:
       return "NA";
-    // case TxPdoTypeEnum::TxPdoCSP:
-    //   return "Tx PDO CSP";
     case TxPdoTypeEnum::TxPdoCST:
       return "Tx PDO CST";
-    // case TxPdoTypeEnum::TxPdoCSV:
-    //   return "Tx PDO CSV";
-    // case TxPdoTypeEnum::TxPdoCSTCSP:
-    //   return "Tx PDO CST/CSP mixed mode";
-    // case TxPdoTypeEnum::TxPdoCSTCSPCSV:
-    //   return "Rx PDO CST/CSP/CSV mixed mode";
     case TxPdoTypeEnum::TxPdoPVM:
       return "Tx PDO PVM";
     case TxPdoTypeEnum::TxPdoStandard:
       return "Tx PDO Standard";
+    case TxPdoTypeEnum::TxPdoJVPT:
+      return "Tx PDO JVPT";
     default:
       return "Unsupported Type";
   }
@@ -153,35 +137,10 @@ std::pair<RxPdoTypeEnum, TxPdoTypeEnum> Configuration::getPdoTypeSolution()
   // clang-format off
   // {ModeOfOperationEnum1, ..., ModeOfOperationEnumN} -> {RxPdoTypeEnum, TxPdoTypeEnum}
   const std::map<std::vector<ModeOfOperationEnum>, std::pair<RxPdoTypeEnum, TxPdoTypeEnum>> modes2PdoTypeMap = {
-      // {
-      //   { ModeOfOperationEnum::CyclicSynchronousTorqueMode, ModeOfOperationEnum::CyclicSynchronousPositionMode },
-      //   { RxPdoTypeEnum::RxPdoCSTCSP, TxPdoTypeEnum::TxPdoCSTCSP }
-      // },
-      // {
-      //   { ModeOfOperationEnum::CyclicSynchronousTorqueMode, ModeOfOperationEnum::CyclicSynchronousPositionMode,
-      //     ModeOfOperationEnum::CyclicSynchronousVelocityMode },
-      //   { RxPdoTypeEnum::RxPdoCSTCSPCSV, TxPdoTypeEnum::TxPdoCSTCSPCSV }
-      // },
-      // {
-      //   { ModeOfOperationEnum::CyclicSynchronousPositionMode },
-      //   { RxPdoTypeEnum::RxPdoCSP, TxPdoTypeEnum::TxPdoCSP }
-      // },
       {
         { ModeOfOperationEnum::CyclicSynchronousTorqueMode },
         { RxPdoTypeEnum::RxPdoCST, TxPdoTypeEnum::TxPdoCST }
       },
-      // {
-      //   { ModeOfOperationEnum::CyclicSynchronousVelocityMode },
-      //   { RxPdoTypeEnum::RxPdoCSV, TxPdoTypeEnum::TxPdoCSV }
-      // },
-      // {
-      //   { ModeOfOperationEnum::HomingMode },
-      //   { RxPdoTypeEnum::NA, TxPdoTypeEnum::NA }
-      // },
-      // {
-      //   { ModeOfOperationEnum::ProfiledPositionMode },
-      //   { RxPdoTypeEnum::NA, TxPdoTypeEnum::NA }
-      // },
       {
         { ModeOfOperationEnum::ProfiledVelocityMode },
         { RxPdoTypeEnum::RxPdoPVM, TxPdoTypeEnum::TxPdoPVM }

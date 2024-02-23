@@ -272,7 +272,20 @@ void Maxon::updateWrite() {
         rxPdo.motionProfileType_ = stagedCommand_.getMotionProfileType();
         // MELO_WARN_STREAM("Target Velocity: " << rxPdo.targetVelocity_);
       }
+      bus_->writeRxPdo(address_, rxPdo);
+      break;
+    }
+        case RxPdoTypeEnum::RxPdoJVPT: {
+      RxPdoJVPT rxPdo{};
+      {
+        std::lock_guard<std::recursive_mutex> lock(stagedCommandMutex_);
+        rxPdo.controlWord_ = controlword_.getRawControlword();
+        rxPdo.targetJointPosition_ = stagedCommand_.getTargetJointPositionRaw();
+        rxPdo.targetJointVelocity_ = stagedCommand_.getTargetJointVelocityRaw();
+        rxPdo.targetJointTorque_ = stagedCommand_.getTargetJointTorqueRaw();
+        rxPdo.modeOfOperation_ = static_cast<int8_t>(modeOfOperation_);
 
+      }
       // actually writing to the hardware
       bus_->writeRxPdo(address_, rxPdo);
       break;
@@ -375,6 +388,24 @@ void Maxon::updateRead() {
         // MELO_WARN_STREAM("Demand Velocity: " << txPdo.demandVelocity_);
         // MELO_WARN_STREAM("Actual Velocity: " << txPdo.actualVelocity_);
       }
+      break;
+    }
+
+    case TxPdoTypeEnum::TxPdoJVPT: {
+      TxPdoJVPT txPdo{};
+
+      //reading from the bus
+      bus_->readTxPdo(address_, txPdo);
+      {
+      //get the bus mutex lock for reading, prevents multiple calls accesing the bus at the same time
+      std::lock_guard<std::recursive_mutex>lock(readingMutex_);
+      //from the TxPDOJVPT configuration read the required values from the actuators
+      reading_.setStatusword(txPdo.statusword_);
+      reading_.setActualJointPositionRAW(txPdo.actualJointPosition_);
+      reading_.setActualJointVelocityRAW(txPdo.actualJointVelocity_);
+      reading_.setEstJointTorqueRAW(txPdo.estJointTorque_);
+      }
+
       break;
     }
     default:
@@ -980,9 +1011,6 @@ Controlword Maxon::getNextStateTransitionControlword(
           break;
         case DriveState::Fault:
           controlword.setStateTransition15();
-          break;
-        case DriveState::FaultReactionActive:
-          controlword.setStateTransition14();
           break;
         default:
           MELO_ERROR_STREAM(
