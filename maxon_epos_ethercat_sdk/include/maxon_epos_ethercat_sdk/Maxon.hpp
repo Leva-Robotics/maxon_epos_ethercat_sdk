@@ -92,10 +92,24 @@ class Maxon : public ecat_master::EthercatDevice {
   bool setControlwordViaSdo(Controlword& controlword);
   bool setDriveStateViaSdo(const DriveState& driveState);
   bool resetDefaultViaSdo();
-  bool readSIVelocitySDO();
+  bool readSIUnitSDO();
   bool readMaxSystemSpeedSDO();
   bool readMaxProfileVelocitySDO();
   bool readVelocityControllerGainSDO();
+  bool readJLVPTControllerGainSDO();
+  bool readMotorDataSDO();
+  double readJointStateSDO();
+  bool setJointPositionTargetSDO(double jointpos);
+  double getHomeReferenceStateSDO();
+  bool getSoftLimitsSDO();
+  bool getFollowErrorSDO();
+  bool readAccelerationLimitsSDO();
+  bool readPositionLimitsSDO();
+  bool getTemperatureStateSDO();
+  bool readVoltageDataSDO();
+  bool getConfigurationSDO();
+
+
  protected:
   bool stateTransitionViaSdo(const StateTransition& stateTransition);
 

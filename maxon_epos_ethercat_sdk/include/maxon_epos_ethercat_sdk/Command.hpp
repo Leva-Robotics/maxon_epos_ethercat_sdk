@@ -79,9 +79,9 @@ class Command {
   void setVelocityOffset(double velocityOffset);
 
   /// set joints in SI Units
-  void setJointPosition(double jointPosition);
-  void setJointVelocity(double jointVelocity);
-  void setJointTorque(double jointTorque);
+  void setTargetJointPosition(double jointPosition);
+  void setTargetJointVelocity(double jointVelocity);
+  void setTargetJointTorque(double jointTorque);
 
   /// other
   void setDigitalOutputs(uint32_t digitalOutputs);

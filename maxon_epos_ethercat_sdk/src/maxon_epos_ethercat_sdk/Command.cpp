@@ -41,10 +41,18 @@ Command::Command(const Command& other) {
   targetTorqueUU_ = other.targetTorqueUU_;
   torqueOffsetUU_ = other.torqueOffsetUU_;
 
+  targetJointPositionUU_ = other.targetJointPositionUU_;
+  targetJointVelocityUU_ = other.targetJointVelocityUU_;
+  targetJointTorqueUU_ = other.targetJointTorqueUU_;
+
   targetPosition_ = other.targetPosition_;
   targetVelocity_ = other.targetVelocity_;
   targetTorque_ = other.targetTorque_;
   torqueOffset_ = other.torqueOffset_;
+
+  targetJointPosition_ = other.targetJointPosition_;
+  targetJointVelocity_ = other.targetJointVelocity_;
+  targetJointTorque_ = other.targetJointTorque_;
 
   positionFactorRadToInteger_ = other.positionFactorRadToInteger_;
   torqueFactorNmToInteger_ = other.torqueFactorNmToInteger_;
@@ -70,6 +78,14 @@ Command& Command::operator=(const Command& other) {
   velocityOffset_ = other.velocityOffset_;
   targetTorque_ = other.targetTorque_;
   torqueOffset_ = other.torqueOffset_;
+
+  targetJointPositionUU_ = other.targetJointPositionUU_;
+  targetJointVelocityUU_ = other.targetJointVelocityUU_;
+  targetJointTorqueUU_ = other.targetJointTorqueUU_;
+
+  targetJointPosition_ = other.targetJointPosition_;
+  targetJointVelocity_ = other.targetJointVelocity_;
+  targetJointTorque_ = other.targetJointTorque_;
 
   positionFactorRadToInteger_ = other.positionFactorRadToInteger_;
   torqueFactorNmToInteger_ = other.torqueFactorNmToInteger_;
@@ -164,19 +180,24 @@ void Command::setVelocityOffset(double velocityOffset) {
 }
 
 
-// set joint values in SI Units
 
-void Command::setJointPosition(double jointPosition) {
-  targetPositionUU_ = jointPosition;
+//Anydrive5 set joint values in SI Units
+
+void Command::setTargetJointPosition(double targetJointPosition) {
+  targetJointPositionUU_ = targetJointPosition;
+  targetJointPosition_ = static_cast<int32_t>((1000) * targetJointPositionUU_);
 }
 
-void Command::setJointVelocity(double jointVelocity) {
-  targetVelocityUU_ = jointVelocity;
+void Command::setTargetJointVelocity(double targetJointVelocity) {
+  targetJointVelocityUU_ = targetJointVelocity;
+  targetJointVelocity_ = static_cast<int32_t>(1000 * targetJointVelocityUU_);
 }
 
-void Command::setJointTorque(double jointTorque) {
-  targetTorqueUU_ = jointTorque;
+void Command::setTargetJointTorque(double targetJointTorque) {
+  targetJointTorqueUU_ = targetJointTorque;
+  targetJointTorque_ = static_cast<int32_t>(1000 * targetJointTorqueUU_);
 }
+
 
 /*!
  * factors set methods
@@ -259,10 +280,6 @@ void Command::doUnitConversion() {
     //velocity in mRpm
     //Default position unit 4096 counts per revolution
     //Torque in mNm
-
-    targetJointPosition_ = static_cast<int32_t>(targetJointPositionUU_ * positionFactorRadToInteger_);
-    targetJointVelocity_ = static_cast<int32_t>(targetJointVelocityUU_ * 1000);
-    targetJointTorque_ = static_cast<int32_t>(targetJointTorqueUU_ * 1000);
 }
 
 /// other get methods

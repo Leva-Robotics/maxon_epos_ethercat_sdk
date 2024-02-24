@@ -404,6 +404,11 @@ void Maxon::updateRead() {
       reading_.setActualJointPositionRAW(txPdo.actualJointPosition_);
       reading_.setActualJointVelocityRAW(txPdo.actualJointVelocity_);
       reading_.setEstJointTorqueRAW(txPdo.estJointTorque_);
+      reading_.setPositionDemand(txPdo.positionDemand);
+      // MELO_WARN_STREAM("Velocity Demand: " << txPdo.velocityDemand);
+      // MELO_WARN_STREAM("Current Demand: " << txPdo.currentDemand);
+      // MELO_WARN_STREAM("Position Demand: " << txPdo.positionDemand);
+      
       }
 
       break;
@@ -515,15 +520,16 @@ bool Maxon::setControlwordViaSdo(Controlword& controlword) {
 }
 
 bool Maxon::resetDefaultViaSdo() {
-  return sendSdoWrite(OD_INDEX_RESET_DEFAULT_PARAMETERS, 0, false, 0x64616F6C);
-}
+  bool success = true;
+  success &=sendSdoWrite(OD_INDEX_RESET_DEFAULT_PARAMETERS, 0x01, true, 0x64);
+  success &=sendSdoWrite(OD_INDEX_RESET_DEFAULT_PARAMETERS, 0x02, true, 0x61);
+  success &=sendSdoWrite(OD_INDEX_RESET_DEFAULT_PARAMETERS, 0x03, true, 0x6F);
+  success &=sendSdoWrite(OD_INDEX_RESET_DEFAULT_PARAMETERS, 0x04, true, 0x6C);
 
-bool Maxon::readSIVelocitySDO() {
-  uint32_t siUnit;
-  bool success = sendSdoRead(OD_INDEX_SI_UNIT_VELOCITY, 0, false, siUnit);
-  MELO_INFO_STREAM("SI Unit: " << siUnit);
   return success;
 }
+
+
 
 bool Maxon::readMaxSystemSpeedSDO() {
   uint32_t maxSystemSpeed;
@@ -555,6 +561,207 @@ bool Maxon::readVelocityControllerGainSDO(){
   return success;
 }
 
+bool Maxon::readJLVPTControllerGainSDO(){
+
+  bool success = true;
+  uint32_t p_gain;
+  uint32_t i_gain;
+  uint32_t d_gain;
+  uint32_t i_max;
+  success &= sendSdoRead(OD_INDEX_JVPT_PARAMETERS, 0x01, false, p_gain);
+  success &= sendSdoRead(OD_INDEX_JVPT_PARAMETERS, 0x02, false, i_gain);
+  success &= sendSdoRead(OD_INDEX_JVPT_PARAMETERS, 0x03, false, d_gain);
+  success &= sendSdoRead(OD_INDEX_JVPT_PARAMETERS, 0x04, false, i_max);
+  MELO_INFO_STREAM("P Gain: " << p_gain);
+  MELO_INFO_STREAM("I Gain: " << i_gain);
+  MELO_INFO_STREAM("D Gain: " << d_gain);
+  MELO_INFO_STREAM("I Max: " << i_max);
+
+  return success;
+}
+
+bool Maxon::readMotorDataSDO() {
+  uint32_t nominalCurrent;
+  uint32_t outputcurrentlimit;
+  uint32_t motor_torque_constant;
+  uint32_t control_data;
+  bool success = true;
+  success &=
+      sendSdoRead(OD_INDEX_MOTOR_DATA, 0x01, false, nominalCurrent);
+  success &=
+      sendSdoRead(OD_INDEX_MOTOR_DATA, 0x02, false, outputcurrentlimit);
+  success &=
+      sendSdoRead(OD_INDEX_MOTOR_DATA, 0x05, false, motor_torque_constant);
+  success &=
+      sendSdoRead(0x3000, 0x02, false, control_data);
+    
+  MELO_INFO_STREAM("Nominal Current: " << nominalCurrent);
+  MELO_INFO_STREAM("Output Current Limit: " << outputcurrentlimit);
+  MELO_INFO_STREAM("Motor Torque Constant: " << motor_torque_constant);
+  MELO_INFO_STREAM("Control Data: " << std::hex << control_data);
+  return success;
+}
+
+double Maxon::readJointStateSDO() {
+  int32_t jointposraw;
+  double jointpos;
+  sendSdoRead(OD_INDEX_JOINT_POSITION_ACTUAL, 0x00, false, jointposraw);
+  jointpos = static_cast<double>(jointposraw) / 4096.0;
+  MELO_INFO_STREAM("Joint Position: " << jointpos);
+  return jointpos;
+}
+
+bool Maxon::setJointPositionTargetSDO(double jointpos) {
+  int32_t jointposraw = static_cast<int32_t>(jointpos * 4096.0);
+  bool success = sendSdoWrite(OD_INDEX_TARGET_JOINT_POSITION, 0x00, false, jointposraw);
+  stagedCommand_.setTargetJointPosition(jointpos);
+  return success;
+}
+
+double Maxon::getHomeReferenceStateSDO() {
+  uint8_t homeref = 0x00;
+  int32_t homereference;
+  int32_t home_position;
+  int8_t homing_method;
+  int32_t homing_offset;
+  bool succes = sendSdoRead(OD_INDEX_HOME_REFERENCE_STATE, 0x02, false, homeref);
+  succes &= sendSdoRead(OD_INDEX_HOME_REFERENCE_STATE, 0x01, false, homereference);
+  succes &= sendSdoRead(OD_INDEX_HOME_POSITION, 0x00, false, home_position);
+  succes &= sendSdoRead(OD_INDEX_HOME_METHOD, 0x00, false, homing_method);
+  succes &= sendSdoRead(OD_INDEX_HOME_OFFSET, 0x00, false, homing_offset);
+  MELO_INFO_STREAM("Homing Method: " << homing_method);
+  MELO_INFO_STREAM("Home Reference: " << static_cast<int>(homeref));
+  MELO_INFO_STREAM("Home Reference Position: " << homereference);
+  MELO_INFO_STREAM("Home Offset: " << homing_offset);
+  MELO_INFO_STREAM("Home Position: " << home_position);
+  return homereference / 4096.0;
+}
+
+bool Maxon::getSoftLimitsSDO(){
+  int32_t min_limit;
+  int32_t max_limit;
+  bool success = true;
+  success &= sendSdoRead(OD_INDEX_SOFT_LIMIT, 0x01, false, min_limit);
+  success &= sendSdoRead(OD_INDEX_SOFT_LIMIT, 0x02, false, max_limit);
+  MELO_INFO_STREAM("Min Limit: " << min_limit);
+  MELO_INFO_STREAM("Max Limit: " << max_limit);
+  return success;
+}
+
+bool Maxon::getFollowErrorSDO(){
+  uint32_t follow_error;
+  bool success = sendSdoRead(OD_INDEX_FOLLOW_ERROR_WINDOW, 0x00, false, follow_error);
+  MELO_INFO_STREAM("Follow Error: " << follow_error);
+  return success;
+
+}
+
+bool Maxon::readSIUnitSDO() {
+  uint32_t siUnitPos;
+  uint32_t siUnitVel;
+  uint32_t siUnitAcc;
+  bool success = true;
+  
+  success &= sendSdoRead(OD_INDEX_SI_UNIT_POSITION, 0, false, siUnitPos);
+  MELO_INFO_STREAM("SI Unit: " << siUnitPos);
+
+  success &= sendSdoRead(OD_INDEX_SI_UNIT_ACCELERATION, 0, false, siUnitAcc);
+  MELO_INFO_STREAM("SI Unit: " << siUnitAcc);
+
+  success &= sendSdoRead(OD_INDEX_SI_UNIT_VELOCITY, 0, false, siUnitVel);
+  MELO_INFO_STREAM("SI Unit: " << siUnitVel);
+
+  return success;
+}
+
+bool Maxon::readAccelerationLimitsSDO(){
+  bool success = true;
+  uint32_t max_acceleration;
+  uint32_t max_profile_acceleration;
+  uint32_t max_profile_deceleration;
+  uint32_t quick_stop_deceleration;
+
+  success &= sendSdoRead(OD_INDEX_MAX_ACCELERATION, 0, false, max_acceleration);
+  success &= sendSdoRead(OD_INDEX_PROFILE_ACCELERATION, 0, false, max_profile_acceleration);
+  success &= sendSdoRead(OD_INDEX_PROFILE_DECELERATION, 0, false, max_profile_deceleration);
+  success &= sendSdoRead(OD_INDEX_QUICKSTOP_DECELERATION, 0, false, quick_stop_deceleration);
+
+  MELO_INFO_STREAM("Max Acceleration: " << max_acceleration);
+  MELO_INFO_STREAM("Max Profile Acceleration: " << max_profile_acceleration);
+  MELO_INFO_STREAM("Max Profile Deceleration: " << max_profile_deceleration);
+  MELO_INFO_STREAM("Quick Stop Deceleration: " << quick_stop_deceleration);
+
+  return success;
+}
+
+bool Maxon::readPositionLimitsSDO(){
+  bool success = true;
+  int32_t max_position_range_limit;
+  int32_t min_position_range_limit;
+  int32_t max_soft_pos_limit;
+  int32_t min_soft_pos_limit;
+
+  success &= sendSdoRead(OD_INDEX_POSITION_RANGE_LIMIT, 0x01, false, min_position_range_limit);
+  success &= sendSdoRead(OD_INDEX_POSITION_RANGE_LIMIT, 0x02, false, max_position_range_limit);
+  success &= sendSdoRead(OD_INDEX_SOFTWARE_POSITION_LIMIT, 0x01, false, min_soft_pos_limit);
+  success &= sendSdoRead(OD_INDEX_SOFTWARE_POSITION_LIMIT, 0x02, false, max_soft_pos_limit);
+
+  return success;
+}
+
+bool Maxon::getTemperatureStateSDO(){
+  bool success = true;
+  int16_t temperature_power_stage;
+  int16_t temperature_motor;
+
+  success &= sendSdoRead(OD_INDEX_TEMPERATURE, 0x01, false, temperature_power_stage);
+  success &= sendSdoRead(OD_INDEX_TEMPERATURE, 0x02, false, temperature_motor);
+
+  MELO_INFO_STREAM("Temperature Power Stage: " << temperature_power_stage);
+  MELO_INFO_STREAM("Temperature Motor: " << temperature_motor);
+
+
+  return success;
+}
+
+bool Maxon::readVoltageDataSDO() {  
+  bool success = true;
+  uint16_t psu_voltage;
+
+  success &= sendSdoRead(OD_INDEX_PSU_VOLTAGE, 0x01, false, psu_voltage);
+
+  MELO_INFO_STREAM("PSU Voltage: " << psu_voltage / 10.0);
+  return success;
+}
+
+
+bool Maxon::getConfigurationSDO(){
+  //First we get the units
+  readSIUnitSDO();
+  //First we read the motor Data
+  readMotorDataSDO();
+  //Then we read voltage data
+  readVoltageDataSDO();
+  //Then we read the velocity controller gain only used for the freeze controller
+  readVelocityControllerGainSDO();
+  //Then we read the Joint Velocity Position Torque controller gain
+  readJLVPTControllerGainSDO();
+  //Then we read the speed limits
+  readMaxSystemSpeedSDO();
+  readMaxProfileVelocitySDO();
+  //Then we read the acceleration limits
+  readAccelerationLimitsSDO();
+  //Then we read the position limits
+  readPositionLimitsSDO();
+  //Then we read the homing reference and state
+  getHomeReferenceStateSDO();
+  //Then we read the position follow error limit
+  getFollowErrorSDO();
+  //Then we read the temperature
+  getTemperatureStateSDO();
+
+  return true;
+}
 
 bool Maxon::setDriveStateViaSdo(const DriveState& driveState) {
   bool success = true;

@@ -146,6 +146,10 @@ std::pair<RxPdoTypeEnum, TxPdoTypeEnum> Configuration::getPdoTypeSolution()
         { RxPdoTypeEnum::RxPdoPVM, TxPdoTypeEnum::TxPdoPVM }
       },
       {
+        { ModeOfOperationEnum::CyclicJVPTMode },
+        { RxPdoTypeEnum::RxPdoJVPT, TxPdoTypeEnum::TxPdoJVPT }
+      },
+      {
         { ModeOfOperationEnum::NA },
         { RxPdoTypeEnum::NA, TxPdoTypeEnum::NA }
       },

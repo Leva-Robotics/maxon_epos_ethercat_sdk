@@ -384,7 +384,7 @@ bool Maxon::mapPdos(RxPdoTypeEnum rxPdoTypeEnum, TxPdoTypeEnum txPdoTypeEnum) {
           (OD_INDEX_TARGET_JOINT_TORQUE << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
           (OD_INDEX_TARGET_JOINT_POSITION << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
           (OD_INDEX_TARGET_JOINT_VELOCITY << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
-          (OD_INDEX_CONTROLWORD << 16) | (0x00 << 8) | sizeof(int16_t) * 8,
+          (OD_INDEX_CONTROLWORD << 16) | (0x00 << 8) | sizeof(uint16_t) * 8,
           (OD_INDEX_MODES_OF_OPERATION << 16) | (0x00 << 8) | sizeof(int8_t) * 8,
       };
 
@@ -750,11 +750,19 @@ bool Maxon::mapPdos(RxPdoTypeEnum rxPdoTypeEnum, TxPdoTypeEnum txPdoTypeEnum) {
                                   configuration_.configRunSdoVerifyTimeout);
 
       // Write objects
-      std::array<uint32_t, 4> objects{
+      std::array<uint32_t, 12> objects{
           (OD_INDEX_STATUSWORD << 16) | (0x00 << 8) | sizeof(uint16_t) * 8,
           (OD_INDEX_JOINT_TORQUE_EST << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
           (OD_INDEX_JOINT_VELOCITY_ACTUAL << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
           (OD_INDEX_JOINT_POSITION_ACTUAL << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
+          (OD_INDEX_JOINT_CURRENT_ACTUAL << 16) | (0x01 << 8) | sizeof(int32_t) * 8,
+          (OD_INDEX_VELOCITY_DEMAND << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
+          (OD_INDEX_CURRENT_DEMAND << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
+          (OD_INDEX_POSITION_DEMAND << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
+          (OD_INDEX_TEMPERATURE << 16) | (0x02 << 8) | sizeof(int16_t) * 8,
+          (OD_INDEX_TEMPERATURE << 16) | (0x01 << 8) | sizeof(int16_t) * 8,
+          (OD_INDEX_I2T << 16) | (0x01 << 8) | sizeof(uint16_t) * 8,
+          (OD_INDEX_I2T << 16) | (0x02 << 8) | sizeof(uint16_t) * 8,
       };
 
       subIndex = 0;
@@ -799,19 +807,19 @@ bool Maxon::mapPdos(RxPdoTypeEnum rxPdoTypeEnum, TxPdoTypeEnum txPdoTypeEnum) {
 
 bool Maxon::configParam() {
   bool configSuccess = true;
-  uint32_t maxMotorSpeed;
-  uint32_t maxProfileVelocity;
-  uint32_t maxGearSpeed;
-  uint32_t nominalCurrent;
-  uint32_t maxCurrent;
-  uint32_t torqueConstant;
-  uint32_t currentPGain;
-  uint32_t currentIGain;
-  uint32_t positionPGain;
-  uint32_t positionIGain;
-  uint32_t positionDGain;
-  uint32_t velocityPGain;
-  uint32_t velocityIGain;
+  // uint32_t maxMotorSpeed;
+  // uint32_t maxProfileVelocity;
+  // uint32_t maxGearSpeed;
+  // uint32_t nominalCurrent;
+  // uint32_t maxCurrent;
+  // uint32_t torqueConstant;
+  // uint32_t currentPGain;
+  // uint32_t currentIGain;
+  // uint32_t positionPGain;
+  // uint32_t positionIGain;
+  // uint32_t positionDGain;
+  // uint32_t velocityPGain;
+  // uint32_t velocityIGain;
 
   // configSuccess &= sdoVerifyWrite(OD_INDEX_SI_UNIT_VELOCITY, 0x00, false, 0xFDB44700,
   //                    configuration_.configRunSdoVerifyTimeout);
@@ -843,16 +851,16 @@ bool Maxon::configParam() {
   // configSuccess &= sdoVerifyWrite(OD_INDEX_SOFTWARE_POSITION_LIMIT, 0x02, false,
   //                                 configuration_.maxPosition);
 
-  nominalCurrent =
-      static_cast<uint32_t>(round(1000.0 * configuration_.nominalCurrentA));
-  configSuccess &=
-      sdoVerifyWrite(OD_INDEX_MOTOR_DATA, 0x01, false, nominalCurrent,
-                     configuration_.configRunSdoVerifyTimeout);
+  // nominalCurrent =
+  //     static_cast<uint32_t>(round(1000.0 * configuration_.nominalCurrentA));
+  // configSuccess &=
+  //     sdoVerifyWrite(OD_INDEX_MOTOR_DATA, 0x01, false, nominalCurrent,
+  //                    configuration_.configRunSdoVerifyTimeout);
 
-  maxCurrent =
-      static_cast<uint32_t>(round(1000.0 * configuration_.maxCurrentA));
-  configSuccess &= sdoVerifyWrite(OD_INDEX_MOTOR_DATA, 0x02, false, maxCurrent,
-                                  configuration_.configRunSdoVerifyTimeout);
+  // maxCurrent =
+  //     static_cast<uint32_t>(round(1000.0 * configuration_.maxCurrentA));
+  // configSuccess &= sdoVerifyWrite(OD_INDEX_MOTOR_DATA, 0x02, false, maxCurrent,
+  //                                 configuration_.configRunSdoVerifyTimeout);
 
   // torqueConstant =
   //     static_cast<uint32_t>(1000000.0 * configuration_.torqueConstantNmA);
@@ -915,6 +923,39 @@ bool Maxon::configParam() {
   // configSuccess &= sdoVerifyWrite(OD_INDEX_VELOCITY_CONTROL_PARAM, 0x02, false,
   //                                 static_cast<uint32_t>(velocityIGain),
   //                                 configuration_.configRunSdoVerifyTimeout);
+
+
+  ///Anydrive5 specific configurations
+  //JPVT mode controller gains
+  uint32_t jpvt_gain_p = 40000;
+  uint32_t jpvt_gain_i = 0;
+  uint32_t jpvt_gain_d = 5000;
+  uint32_t jpvt_gain_maxi = 10000;
+
+  configSuccess &= sdoVerifyWrite(OD_INDEX_JVPT_PARAMETERS, 0x01, false,
+                                  jpvt_gain_p,
+                                  configuration_.configRunSdoVerifyTimeout);
+  configSuccess &= sdoVerifyWrite(OD_INDEX_JVPT_PARAMETERS, 0x02, false,
+                                  jpvt_gain_i,
+                                  configuration_.configRunSdoVerifyTimeout);
+  configSuccess &= sdoVerifyWrite(OD_INDEX_JVPT_PARAMETERS, 0x03, false,
+                                  jpvt_gain_d,
+                                  configuration_.configRunSdoVerifyTimeout);
+  configSuccess &= sdoVerifyWrite(OD_INDEX_JVPT_PARAMETERS, 0x04, false,
+                                  jpvt_gain_maxi,
+                                  configuration_.configRunSdoVerifyTimeout);
+  
+  //motot torque constant
+  uint32_t torque_constant = 1 * 1000000;
+  configSuccess &= sdoVerifyWrite(OD_INDEX_MOTOR_DATA, 0x05, false,
+                                  torque_constant,
+                                  configuration_.configRunSdoVerifyTimeout);
+
+  //Disable impact mitigation
+  bool impact_mitigation = false;
+  configSuccess &= sdoVerifyWrite(OD_INDEX_IMPACT_MITIGATION, 0x1A, false,
+                                  impact_mitigation,
+                                  configuration_.configRunSdoVerifyTimeout);
 
   if (configSuccess) {
     MELO_INFO("Setting configuration parameters succeeded.");

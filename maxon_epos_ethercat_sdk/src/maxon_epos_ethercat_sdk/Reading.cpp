@@ -38,15 +38,19 @@
 std::ostream& operator<<(std::ostream& os, const maxon::Reading& reading) {
   // TODO(duboisf) make table, remove statusword
   os << std::left << std::setw(30)
-     << "Actual Position:" << reading.getActualPosition() << "\n"
-     << std::setw(30) << "Actual Velocity:" << reading.getActualVelocity()
+     << "Actual Position:" << reading.getActualJointPosition() << "\n" << std::setw(30) 
+     << "Actual Velocity:" << reading.getActualJointVelocity() << "\n"<< std::setw(30) 
+     << "Estimated Torque:" << reading.getEstJointTorque() << "\n"<< std::setw(30)
+     << "Actual Current:" << reading.getActualJointCurrent() << "\n"<< std::setw(30)
+     << "Demanded Position:" << reading.getDemandedJointPosition() << "\n"<< std::setw(30)
+     << "Demanded Velocity:" << reading.getDemandedJointVelocity() << "\n"<< std::setw(30)
+     << "Demanded Current:" << reading.getDemandedJointCurrent() << "\n"<< std::setw(30)
+     << "Motor Temperature:" << reading.getMotorTemperature() << "\n"<< std::setw(30)    
+     << "I2t Motor:" << reading.getI2tMotor() << "\n"<< std::setw(30)
+     << "PSU Temperature:" << reading.getPsuTemperature() << "\n"<< std::setw(30) 
+     << "I2t PSU:" << reading.getI2tPSU() << "\n"<< std::setw(30)
+     << "Estimated Torque:" << reading.getEstJointTorque() << "\n"
      << "\n"
-     << std::setw(30) << "Actual Torque:" << reading.getActualTorque() << "\n"
-     << std::setw(30) << "Analog input" << reading.getAnalogInput() << "\n"
-     << std::setw(30) << "Actual Current:" << reading.getActualCurrent() << "\n"
-     << std::setw(30) << "Digital Inputs:" << reading.getDigitalInputString()
-     << "\n"
-     << std::setw(30) << "Bus Voltage:" << reading.getBusVoltage() << "\n"
      << std::setw(30) << "\nStatusword:"
      << "\n"
      << reading.getStatusword() << std::right;
@@ -109,20 +113,57 @@ double Reading::getAnalogInput() const {
   return static_cast<double>(analogInput_) * 0.001;
 }
 
+double Reading::getDemandPosition() const {
+  return static_cast<double>(positionDemand_) / 1000;
+}
+
 // Anydrive5 user unit reading methods, these are hardcoded for anydrive 5
 // I am not using any configuration file for these values because it is writte
 // poorly and I don't trust it
 
 double Reading::getActualJointPosition() const {
-  return static_cast<double>(actualJointPosition_) * 1;
+  return static_cast<double>(actualJointPosition_) / 1000;
 }
 
 double Reading::getActualJointVelocity() const {
-  return static_cast<double>(actualJointVelocity_) * 1;
+  return static_cast<double>(actualJointVelocity_) * 0.001;
 }
 
 double Reading::getEstJointTorque() const {
-  return static_cast<double>(estJointTorque_) * 1;
+  return static_cast<double>(estJointTorque_) * 0.001;
+}
+
+double Reading::getActualJointCurrent() const {
+  return static_cast<double>(actualJointCurrent_) * 0.001;
+}
+
+
+double Reading::getDemandedJointPosition() const {
+  return static_cast<double>(demandedJointPosition_) / 1000;
+}
+
+double Reading::getDemandedJointVelocity() const {
+  return static_cast<double>(demandedJointVelocity_) * 0.001;
+}
+
+double Reading::getDemandedJointCurrent() const {
+  return static_cast<double>(demandedJointCurent_) * 0.001;
+}
+
+double Reading::getMotorTemperature() const {
+  return static_cast<double>(motorTemperature_) * 0.1;
+}
+
+double Reading::getPsuTemperature() const {
+  return static_cast<double>(psuTemperature_) * 0.1;
+}
+
+double Reading::getI2tMotor() const {
+  return static_cast<double>(i2tMotor_) * 0.01;
+}
+
+double Reading::getI2tPSU() const {
+  return static_cast<double>(i2tPSU_) * 0.01;
 }
 
 
@@ -175,6 +216,10 @@ void Reading::setTorqueFactorIntegerToNm(double torqueFactor) {
   torqueFactorIntegerToNm_ = torqueFactor;
 }
 
+void Reading::setPositionDemand(int32_t positionDemand) {
+  positionDemand_ = positionDemand;
+}
+
   //Anydrive5 specific RAW reading methods
 
   void Reading::setActualJointPositionRAW(int32_t actualJointPosition) {
@@ -188,6 +233,38 @@ void Reading::setTorqueFactorIntegerToNm(double torqueFactor) {
   void Reading::setEstJointTorqueRAW(int32_t estJointTorque) {
     estJointTorque_ = estJointTorque;
   }
+
+  void Reading::setDemandedJointPositionRAW(int32_t demandedJointPosition) {
+    demandedJointPosition_ = demandedJointPosition;
+  }
+
+  void Reading::setDemandedJointVelocityRAW(int32_t demandedJointVelocity) {
+    demandedJointVelocity_ = demandedJointVelocity;
+  }
+
+  void Reading::setDemandedJointCurrentRAW(int32_t demandedJointCurrent) {
+    demandedJointCurent_ = demandedJointCurrent;
+  }
+
+  void Reading::setMotorTemperatureRAW(int16_t motorTemperature) {
+    motorTemperature_ = motorTemperature;
+  }
+
+  void Reading::setPsuTemperatureRAW(int16_t psuTemperature) {
+    psuTemperature_ = psuTemperature;
+  }
+
+  void Reading::setI2tMotorRAW(int16_t i2tMotor) {
+    i2tMotor_ = i2tMotor;
+  }
+
+  void Reading::setI2tPSURAW(int16_t i2tPSU) {
+    i2tPSU_ = i2tPSU;
+  }
+
+
+
+
 
 
 double Reading::getAgeOfLastErrorInMicroseconds() const {
