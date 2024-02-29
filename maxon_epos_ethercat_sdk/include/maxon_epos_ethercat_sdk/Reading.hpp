@@ -103,6 +103,8 @@ class Reading {
   double getI2tMotor() const;
   double getI2tPSU() const;
 
+  double SI_pos_to_inc{4096 / (2 * M_PI)};
+
   /*!
    * Other get methods
    */
@@ -147,6 +149,8 @@ class Reading {
   void setActualJointVelocityRAW(int32_t actualJointVelocity);
 
   void setEstJointTorqueRAW(int32_t estJointTorque);
+
+  void setActualJointCurrentRAW(int32_t actualJointCurrent);
 
   void setDemandedJointPositionRAW(int32_t demandedJointPosition);
 

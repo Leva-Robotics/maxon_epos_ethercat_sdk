@@ -134,16 +134,12 @@
 #define OD_INDEX_JOINT_CURRENT_ACTUAL (0x30D1)
 
 #define OD_INDEX_TARGET_JOINT_TORQUE (0x34C3)
-//not sure abot these two values normallly you cannot write tot these with PDO
-//but JVPT controller seemingly uses these as input 
-// #define OD_INDEX_TARGET_JOINT_VELOCITY (0x606B) //0x60FF target velocity
-// #define OD_INDEX_TARGET_JOINT_POSITION (0x6062) //0x607A target position
-
-#define OD_INDEX_TARGET_JOINT_VELOCITY (0x60FF) //0x60FF target velocity
-#define OD_INDEX_TARGET_JOINT_POSITION (0x607A) //0x607A target position
+#define OD_INDEX_TARGET_JOINT_VELOCITY (0x60FF)
+#define OD_INDEX_TARGET_JOINT_POSITION (0x607A)
 
 
 //Jvtc parameters locations
 
+#define OD_INDEX_JVPT_TORQUE_CONTROL_PARAM (0x3671)
 #define OD_INDEX_JVPT_PARAMETERS (0x34C6)
 

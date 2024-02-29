@@ -49,6 +49,8 @@ std::string modeOfOperationString(ModeOfOperationEnum modeOfOperation_) {
       return "Cyclic Synchronous Torque Mode";
     case ModeOfOperationEnum::CyclicJVPTMode:
       return "Cyclic JVPT Mode";
+    case ModeOfOperationEnum::CyclicFreezeMode:
+      return "Cyclic Joint Freeze Mode";
     default:
       return "Unsupported Mode of Operation";
   }
@@ -66,6 +68,8 @@ std::string rxPdoString(RxPdoTypeEnum rxPdo) {
       return "Rx PDO PVM";
     case RxPdoTypeEnum::RxPdoJVPT:
       return "Rx PDO JVPT";
+    case RxPdoTypeEnum::RxPdoFreeze:
+      return "Rx PDO Freeze";
     default:
       return "Unsupported Type";
   }
@@ -83,6 +87,8 @@ std::string txPdoString(TxPdoTypeEnum txPdo) {
       return "Tx PDO Standard";
     case TxPdoTypeEnum::TxPdoJVPT:
       return "Tx PDO JVPT";
+    case TxPdoTypeEnum::TxPdoFreeze:
+      return "Tx PDO Freeze";
     default:
       return "Unsupported Type";
   }
@@ -146,7 +152,7 @@ std::pair<RxPdoTypeEnum, TxPdoTypeEnum> Configuration::getPdoTypeSolution()
         { RxPdoTypeEnum::RxPdoPVM, TxPdoTypeEnum::TxPdoPVM }
       },
       {
-        { ModeOfOperationEnum::CyclicJVPTMode },
+        { ModeOfOperationEnum::CyclicJVPTMode, ModeOfOperationEnum::CyclicFreezeMode},
         { RxPdoTypeEnum::RxPdoJVPT, TxPdoTypeEnum::TxPdoJVPT }
       },
       {
@@ -170,6 +176,7 @@ std::pair<RxPdoTypeEnum, TxPdoTypeEnum> Configuration::getPdoTypeSolution()
                     modeOfOperation) != modesOfOperation.end();
     if (setsAreEqual) return modes2PdoTypeEntry.second;
   }
+  printf("No valid combination of modes of operation found");
   return std::pair<RxPdoTypeEnum, TxPdoTypeEnum>{RxPdoTypeEnum::NA,
                                                  TxPdoTypeEnum::NA};
 }
@@ -195,50 +202,7 @@ bool Configuration::sanityCheck(bool silent) const {
   auto pdoTypePair = getPdoTypeSolution();
   // clang-format off
   const std::vector<std::pair<bool, std::string>> sanity_tests = {
-      {
-        (polePairs > 0),
-        "pole_pairs > 0"
-      },
-      {
-        (nominalCurrentA > 0),
-        "nominal_current > 0"
-      },
-      {
-        (maxCurrentA > 0),
-        "max_current > 0"
-      },
-      {
-        (maxGearboxInputVelocityRPM > 0),
-        "max_gearbox_input_velocity > 0"
-      },
-      {
-        (torqueConstantNmA > 0),
-        "torque_constant > 0"
-      },
-      {
-        (maxProfileVelocity > 0),
-        "max_profile_velocity > 0"
-      },
-      {
-        (quickStopDecel > 0),
-        "quick_stop_decel > 0"
-      },
-      {
-        (profileDecel > 0),
-        "profile_decel > 0"
-      },
-      {
-        (profileAccel > 0),
-        "profile_accel > 0"
-      },
-      {
-        (positionEncoderResolution > 0),
-        "position_encoder_resolution > 0"
-      },
-      {
-        (gearRatio > 0),
-        "gear_ratio > 0"
-      },
+
       {
         (pdoTypePair.first != RxPdoTypeEnum::NA && pdoTypePair.second != TxPdoTypeEnum::NA),
         "modes of operation combination allowed"
@@ -247,6 +211,10 @@ bool Configuration::sanityCheck(bool silent) const {
         (driveStateChangeMinTimeout <= driveStateChangeMaxTimeout),
         "drive_state_change_min_timeout ≤ drive_state_change_max_timeout"
       },
+      {
+        (softMaxPosLimitSI == 0 && softMinPosLimitSI == 0),
+        "soft position limits are not used"
+      }
   };
   // clang-format on
 

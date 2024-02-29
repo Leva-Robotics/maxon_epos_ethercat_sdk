@@ -45,7 +45,7 @@ enum class ModeOfOperationEnum : int8_t {
   // CyclicSynchronousVelocityMode = 9,
   CyclicSynchronousTorqueMode = 10,
   CyclicJVPTMode = -64,
-  CyclicJointFreezeMode = -62
+  CyclicFreezeMode = -62
   
 };
 

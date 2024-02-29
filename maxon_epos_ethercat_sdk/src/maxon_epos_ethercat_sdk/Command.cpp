@@ -185,7 +185,7 @@ void Command::setVelocityOffset(double velocityOffset) {
 
 void Command::setTargetJointPosition(double targetJointPosition) {
   targetJointPositionUU_ = targetJointPosition;
-  targetJointPosition_ = static_cast<int32_t>((1000) * targetJointPositionUU_);
+  targetJointPosition_ = static_cast<int32_t>( SI_pos_to_inc * targetJointPositionUU_);
 }
 
 void Command::setTargetJointVelocity(double targetJointVelocity) {

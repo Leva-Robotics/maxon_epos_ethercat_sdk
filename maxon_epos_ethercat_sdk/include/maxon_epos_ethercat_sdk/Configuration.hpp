@@ -79,6 +79,17 @@ class Configuration {
   double positionDGainSI{0.016};
   double velocityPGainSI{0.02};
   double velocityIGainSI{0.5};
+
+  // ANYDRIVE5 specific setings
+
+  double maxTorqueSI{0};
+  double jvptPGain{0};
+  double jvptIGain{0};
+  double jvptDGain{0};
+
+  double softMaxPosLimitSI{0};
+  double softMinPosLimitSI{0};
+
   uint32_t velocityUnitSetting{0};
   double velocityFactorConfiguredUnitToRadPerSec{0};
 
