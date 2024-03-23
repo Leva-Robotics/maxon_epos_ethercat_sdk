@@ -721,11 +721,13 @@ bool Maxon::doHoming() {
 
 
     if(homing_finished) {
-      MELO_INFO_STREAM("homing finished")
+      MELO_INFO_STREAM("homing finished");
+      return true;
     } else {
       MELO_ERROR_STREAM("Maximum number of retries reached");
+      return false;
     }
-  return true;
+  return false;
 }
 
 bool Maxon::setDriveStateViaSdo(const DriveState& driveState) {
