@@ -680,6 +680,54 @@ bool Maxon::getConfigurationSDO(){
   return true;
 }
 
+
+bool Maxon::storeParam() {
+  //the signature for saving is 0x65766173
+  uint32_t signature = static_cast<uint32_t>(0x65766173);
+  return sdoVerifyWrite(OD_STORE_PARAM, 0x01, false, signature);
+}
+
+
+bool Maxon::doHoming() {
+  bool success = true;
+
+    // set the homing mwthod via sdo
+    success &= sdoVerifyWrite(OD_HOMING_METHOD, 0x00, false, static_cast<int8_t>(37), configuration_.configRunSdoVerifyTimeout);
+
+    // change the operation mode to homing
+    // start the homing process by setting the controlword
+    // for homing operation start controlword bit 4 -> 1
+    Command command;
+    command.setModeOfOperation(maxon::ModeOfOperationEnum::HomingMode);
+    stageCommand(command);
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+
+    controlword_.homingOperationStart_ = true;
+
+    /// wait for the homing to finish 
+
+    bool homing_finished = false;
+    uint count = 0;
+
+    while ( !homing_finished && (count < 20)) {
+      MELO_INFO_STREAM("homing in progress");
+      Reading reading = getReading();
+      Statusword status = reading.getStatusword();
+      MELO_INFO_STREAM("Statusword:" << status);
+      homing_finished = status.homingFinished();
+      count ++;
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
+
+
+    if(homing_finished) {
+      MELO_INFO_STREAM("homing finished")
+    } else {
+      MELO_ERROR_STREAM("Maximum number of retries reached");
+    }
+  return true;
+}
+
 bool Maxon::setDriveStateViaSdo(const DriveState& driveState) {
   bool success = true;
   Statusword currentStatusword;

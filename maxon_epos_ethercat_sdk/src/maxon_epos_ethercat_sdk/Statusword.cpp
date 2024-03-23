@@ -161,4 +161,13 @@ std::string Statusword::getDriveStateString() const {
   }
 }
 
+bool Statusword::homingFinished() {
+  bool success = true;
+
+  success &= static_cast<bool>(!(rawStatusword_ & (1 << 13)));
+  success &= static_cast<bool>((rawStatusword_ & (1 << 12)));
+
+  return success;
+}
+
 }  // namespace maxon

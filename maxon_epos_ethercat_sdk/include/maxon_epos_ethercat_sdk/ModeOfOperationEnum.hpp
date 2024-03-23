@@ -40,7 +40,7 @@ enum class ModeOfOperationEnum : int8_t {
   NA = 0,
   // ProfiledPositionMode = 1,
   ProfiledVelocityMode = 3,
-  // HomingMode = 6,
+  HomingMode = 6,
   // CyclicSynchronousPositionMode = 8,
   // CyclicSynchronousVelocityMode = 9,
   CyclicSynchronousTorqueMode = 10,

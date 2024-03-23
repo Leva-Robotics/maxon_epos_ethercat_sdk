@@ -125,6 +125,10 @@ uint16_t Controlword::getRawControlword() {
   //   rawControlword |= (1 << 15);
   // }
 
+  if (homingOperationStart_) {
+    rawControlword |= (1 << 4);
+  }
+
   return rawControlword;
 }
 

@@ -109,6 +109,11 @@ class Maxon : public ecat_master::EthercatDevice {
   bool readVoltageDataSDO();
   bool getConfigurationSDO();
 
+  //homing
+
+  bool doHoming();
+  bool storeParam();
+
 
  protected:
   bool stateTransitionViaSdo(const StateTransition& stateTransition);

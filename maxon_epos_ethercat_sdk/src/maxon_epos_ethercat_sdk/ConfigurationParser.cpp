@@ -87,6 +87,7 @@ bool getModesFromFile(YAML::Node& yamlNode, const std::string& varName,
         {"CyclicSynchronousTorqueMode",ModeOfOperationEnum::CyclicSynchronousTorqueMode},
         {"CyclicJVPTMode", ModeOfOperationEnum::CyclicJVPTMode},
         {"CyclicFreezeMode", ModeOfOperationEnum::CyclicFreezeMode},
+        {"HomingMode", ModeOfOperationEnum::HomingMode},
     };
 
     std::vector<std::string> strModes =

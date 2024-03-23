@@ -143,3 +143,11 @@
 #define OD_INDEX_JVPT_TORQUE_CONTROL_PARAM (0x3671)
 #define OD_INDEX_JVPT_PARAMETERS (0x34C6)
 
+
+//homing parameters
+
+#define OD_HOMING_METHOD (0x6098)
+
+//store param
+
+#define OD_STORE_PARAM (0x1010)
